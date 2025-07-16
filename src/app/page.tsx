@@ -1,103 +1,415 @@
-import Image from "next/image";
+"use client";
+import React, { useState } from "react";
+import type { ChangeEvent } from "react";
+
+const LICENSES = [
+  {
+    name: "MIT",
+    badge:
+      "[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)",
+    text: `This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.`,
+  },
+  {
+    name: "Apache 2.0",
+    badge:
+      "[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=for-the-badge)](https://opensource.org/licenses/Apache-2.0)",
+    text: `This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.`,
+  },
+  {
+    name: "GPLv3",
+    badge:
+      "[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)",
+    text: `This project is licensed under the GPLv3 License - see the [LICENSE](LICENSE) file for details.`,
+  },
+];
+
+const BADGES = [
+  "![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white&style=for-the-badge)",
+  "![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white&style=for-the-badge)",
+  "![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-06B6D4?logo=tailwindcss&logoColor=white&style=for-the-badge)",
+  "![Google AI](https://img.shields.io/badge/Google%20AI-4285F4?logo=google&logoColor=white&style=for-the-badge)",
+  "![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white&style=for-the-badge)",
+];
+
+type License = {
+  name: string;
+  badge: string;
+  text: string;
+};
+
+type FormState = {
+  projectName: string;
+  description: string;
+  features?: string;
+  installation: string;
+  usage: string;
+  contribution: string;
+  liveLink: string;
+  license: License;
+};
+
+function generateReadme({
+  projectName,
+  description,
+  features,
+  installation,
+  usage,
+  license,
+  contribution,
+  liveLink,
+}: {
+  projectName: string;
+  description: string;
+  features?: string;
+  installation: string;
+  usage: string;
+  license: License;
+  contribution: string;
+  liveLink: string;
+}): string {
+  return `# ${projectName || "Project Name"}
+
+${BADGES.join("\n")}
+${license.badge ? `\n${license.badge}` : ""}
+
+## About\n\n${description || "Project description goes here."}
+
+## Features\n\n${features || "- Dynamic form fields for experience, education, and skills  \n- AI-enhanced work experience descriptions via Google's Gemini API  \n- Responsive design using Tailwind CSS  \n- Serverless API routes for handling resume data  \n- Form validation for complete and accurate input"}
+
+## Technology Stack\n\n- **Frontend**: React.js (Next.js), TypeScript, Tailwind CSS  \n- **Backend**: Next.js API Routes  \n- **AI Integration**: Google Gemini API (for generating descriptions)  \n- **Deployment**: Vercel
+
+## Live Deployment\n\n- **View Here**: [${liveLink || "https://your-live-link.com/"}](https://${liveLink || "your-live-link.com/"})
+
+## Installation\n\n${installation || "Describe installation steps here."}
+
+## Usage\n\n${usage || "Describe usage instructions here."}
+
+## Contribution\n\n${contribution || "Describe contribution guidelines here."}
+
+## License\n\n${license.text}
+`;
+}
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [form, setForm] = useState<FormState>({
+    projectName: "ResuMaker",
+    description:
+      "**ResuMaker** is a dynamic web application built with **Next.js** and **TypeScript** that enables users to create professional resumes. It features **AI-enhanced descriptions** for work experiences, ensuring users can easily generate impactful bullet points for their job roles.",
+    installation: "",
+    usage: "",
+    contribution: "",
+    liveLink: "resumaker-six.vercel.app/",
+    license: LICENSES[0],
+  });
+  const [readme, setReadme] = useState(() => generateReadme({ ...form, license: LICENSES[0] }));
+  const [apiKey, setApiKey] = useState<string>("");
+  const [loadingField, setLoadingField] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // Load API key from localStorage on mount
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedKey = localStorage.getItem("ai_api_key") || "";
+      setApiKey(savedKey);
+    }
+  }, []);
+
+  const handleApiKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setApiKey(e.target.value);
+  };
+
+  const handleApiKeySave = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ai_api_key", apiKey);
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => {
+      const updated = { ...prev, [name]: value };
+      setReadme(generateReadme({ ...updated, license: updated.license }));
+      return updated;
+    });
+  };
+
+  const handleLicenseChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selected = LICENSES.find((l) => l.name === e.target.value) || LICENSES[0];
+    setForm((prev) => {
+      const updated = { ...prev, license: selected };
+      setReadme(generateReadme({ ...updated, license: selected }));
+      return updated;
+    });
+  };
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(readme);
+    // toast notification will be added in next step
+  };
+
+  const handleDownload = () => {
+    const blob = new Blob([readme], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "README.md";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  async function handleAIGenerate(field: "description" | "features" | "usage") {
+    setLoadingField(field);
+    setError("");
+    let prompt = "";
+    if (field === "description") {
+      prompt = `Write a concise, professional project description for a README about a web app called ${form.projectName}.`;
+    } else if (field === "features") {
+      prompt = `List the main features of a web app called ${form.projectName} for a README, in markdown bullet points.`;
+    } else if (field === "usage") {
+      prompt = `Write clear usage instructions for a web app called ${form.projectName} for a README.`;
+    }
+    try {
+      let aiText = "";
+      if (apiKey.startsWith("sk-")) {
+        // OpenAI
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: prompt }],
+            max_tokens: 256,
+            temperature: 0.7,
+          }),
+        });
+        const data = await res.json();
+        aiText = data.choices?.[0]?.message?.content?.trim() || "";
+      } else if (apiKey) {
+        // Gemini (Google AI)
+        const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+          }),
+        });
+        const data = await res.json();
+        aiText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+      } else {
+        setError("Please provide a valid API key for AI generation.");
+        setLoadingField(null);
+        return;
+      }
+      setForm((prev) => {
+        const updated = { ...prev, [field]: aiText };
+        setReadme(generateReadme({ ...updated, license: updated.license }));
+        return updated;
+      });
+    } catch (e) {
+      setError("AI generation failed. Please check your API key and try again.");
+    } finally {
+      setLoadingField(null);
+    }
+  }
+
+  return (
+    <main className="min-h-screen flex flex-col md:flex-row items-start justify-center bg-white dark:bg-black text-black dark:text-white p-4 md:p-8 gap-8">
+      <section className="w-full max-w-lg flex flex-col gap-4 bg-gray-50 dark:bg-gray-900 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-800">
+        <h1 className="text-3xl font-bold mb-2 text-center">README Generator</h1>
+        <div className="mb-4 p-3 rounded bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-100 text-sm">
+          <strong>Free & Private:</strong> This app is 100% free and does not use any paid APIs. For AI features, you can provide your own API key (e.g., Gemini, OpenAI) below. Your key is stored only in your browser and never sent anywhere else.<br/>
+          <span className="block mt-2">Get a free API key from <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="underline">Google Gemini</a> or <a href="https://platform.openai.com/account/api-keys" target="_blank" rel="noopener noreferrer" className="underline">OpenAI</a>.</span>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        {error && <div className="text-red-600 bg-red-50 border border-red-200 rounded p-2 text-sm">{error}</div>}
+        <form className="flex flex-col gap-4" onSubmit={e => e.preventDefault()} aria-label="README Generator Form">
+          <label htmlFor="apiKey" className="font-medium">AI API Key (optional)
+            <div className="flex gap-2 mt-1">
+              <input
+                id="apiKey"
+                className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="password"
+                value={apiKey}
+                onChange={handleApiKeyChange}
+                placeholder="Paste your Gemini or OpenAI API key here"
+                autoComplete="off"
+              />
+              <button
+                type="button"
+                className="bg-blue-600 text-white rounded px-3 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={handleApiKeySave}
+                aria-label="Save API Key"
+              >
+                Save
+              </button>
+            </div>
+          </label>
+          <label htmlFor="projectName" className="font-medium">Project Name
+            <input
+              id="projectName"
+              className="mt-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="projectName"
+              value={form.projectName}
+              onChange={handleChange}
+              required
+              aria-required="true"
+              autoComplete="off"
+            />
+          </label>
+          <label htmlFor="description" className="font-medium flex flex-col gap-1">Description
+            <div className="flex gap-2 items-center">
+              <textarea
+                id="description"
+                className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                rows={3}
+                required
+                aria-required="true"
+              />
+              <button
+                type="button"
+                className="bg-purple-600 text-white rounded px-3 py-2 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center"
+                onClick={() => handleAIGenerate("description")}
+                disabled={loadingField === "description"}
+                aria-label="Generate description with AI"
+              >
+                {loadingField === "description" ? <span className="animate-spin mr-1">⏳</span> : <span className="mr-1">✨</span>}
+                AI
+              </button>
+            </div>
+          </label>
+          <label htmlFor="features" className="font-medium flex flex-col gap-1">Features
+            <div className="flex gap-2 items-center">
+              <textarea
+                id="features"
+                className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="features"
+                value={form.features || ""}
+                onChange={e => {
+                  setForm((prev) => {
+                    const updated = { ...prev, features: e.target.value };
+                    setReadme(generateReadme({ ...updated, license: updated.license }));
+                    return updated;
+                  });
+                }}
+                rows={3}
+              />
+              <button
+                type="button"
+                className="bg-purple-600 text-white rounded px-3 py-2 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center"
+                onClick={() => handleAIGenerate("features")}
+                disabled={loadingField === "features"}
+                aria-label="Generate features with AI"
+              >
+                {loadingField === "features" ? <span className="animate-spin mr-1">⏳</span> : <span className="mr-1">✨</span>}
+                AI
+              </button>
+            </div>
+          </label>
+          <label htmlFor="usage" className="font-medium flex flex-col gap-1">Usage Instructions
+            <div className="flex gap-2 items-center">
+              <textarea
+                id="usage"
+                className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                name="usage"
+                value={form.usage}
+                onChange={handleChange}
+                rows={2}
+              />
+              <button
+                type="button"
+                className="bg-purple-600 text-white rounded px-3 py-2 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center"
+                onClick={() => handleAIGenerate("usage")}
+                disabled={loadingField === "usage"}
+                aria-label="Generate usage with AI"
+              >
+                {loadingField === "usage" ? <span className="animate-spin mr-1">⏳</span> : <span className="mr-1">✨</span>}
+                AI
+              </button>
+            </div>
+          </label>
+          <label htmlFor="contribution" className="font-medium">Contribution Guidelines
+            <textarea
+              id="contribution"
+              className="mt-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="contribution"
+              value={form.contribution}
+              onChange={handleChange}
+              rows={2}
+            />
+          </label>
+          <label htmlFor="liveLink" className="font-medium">Live Deployment Link
+            <input
+              id="liveLink"
+              className="mt-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="liveLink"
+              value={form.liveLink}
+              onChange={handleChange}
+              placeholder="your-live-link.com"
+              autoComplete="off"
+            />
+          </label>
+          <label htmlFor="license" className="font-medium">License
+            <select
+              id="license"
+              className="mt-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="license"
+              value={form.license.name}
+              onChange={handleLicenseChange}
+              aria-label="License Type"
+            >
+              {LICENSES.map((l) => (
+                <option key={l.name} value={l.name}>
+                  {l.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className="flex gap-2 mt-2">
+            <button
+              type="button"
+              className="flex-1 bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={handleCopy}
+              aria-label="Copy README to clipboard"
+            >
+              Copy
+            </button>
+            <button
+              type="button"
+              className="flex-1 bg-green-600 text-white rounded px-4 py-2 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+              onClick={handleDownload}
+              aria-label="Download README.md"
+            >
+              Download
+            </button>
+          </div>
+        </form>
+      </section>
+      <section className="w-full flex-1 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-auto shadow-lg border border-gray-200 dark:border-gray-800 max-w-3xl">
+        <h2 className="text-xl font-semibold mb-2 text-center md:text-left">Live Preview</h2>
+        <MarkdownPreview markdown={readme} />
+      </section>
+    </main>
+  );
+}
+
+function MarkdownPreview({ markdown }: { markdown: string }) {
+  const [html, setHtml] = React.useState("");
+  React.useEffect(() => {
+    (async () => {
+      const mod = await import("marked");
+      const result = await mod.parse(markdown);
+      setHtml(result);
+    })();
+  }, [markdown]);
+  return (
+    <div
+      className="prose prose-sm max-w-none dark:prose-invert"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   );
 }
