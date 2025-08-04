@@ -208,7 +208,7 @@ export default function Home() {
         setReadme(generateReadme({ ...updated, license: updated.license }));
         return updated;
       });
-    } catch (e) {
+    } catch {
       setError("AI generation failed. Please check your API key and try again.");
     } finally {
       setLoadingField(null);
