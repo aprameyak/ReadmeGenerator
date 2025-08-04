@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt } = await request.json();
+    const { prompt, field, projectData } = await request.json();
     
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -10,6 +10,33 @@ export async function POST(request: NextRequest) {
         { error: 'Gemini API key not configured' },
         { status: 500 }
       );
+    }
+
+    let systemPrompt = "";
+    if (field === "description") {
+      systemPrompt = `You are a professional README writer. Write a concise, engaging "About" section for a project called "${projectData.projectName}". 
+      
+The description should:
+- Be 2-3 sentences long
+- Explain what the project does and its main purpose
+- Use bold text for key technologies/concepts
+- Be professional but approachable
+- Focus on the value/benefit to users
+
+Format as markdown with proper bold formatting.`;
+    } else if (field === "features") {
+      systemPrompt = `You are a professional README writer. Create a "Features" section for a project called "${projectData.projectName}".
+      
+The features should:
+- Be 4-6 bullet points
+- Use markdown bullet points (- )
+- Be specific and actionable
+- Highlight key capabilities
+- Be concise but informative
+
+Format as markdown bullet points.`;
+    } else {
+      systemPrompt = prompt;
     }
 
     const response = await fetch(
@@ -24,7 +51,7 @@ export async function POST(request: NextRequest) {
             {
               parts: [
                 {
-                  text: prompt
+                  text: systemPrompt
                 }
               ]
             }

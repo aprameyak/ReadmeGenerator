@@ -1,12 +1,12 @@
 # README Generator
 
-A modern web application built with Next.js and TypeScript that helps developers create professional README files for their projects. Features AI-powered content generation using Google's Gemini 2.0 Flash.
+A modern web application built with Next.js and TypeScript that helps developers create professional README files for any project. Features AI-powered content generation using Google's Gemini 2.0 Flash.
 
 ## Features
 
-- **AI-Powered Content Generation**: Uses Google Gemini 2.0 Flash to generate professional descriptions, features, and usage instructions
+- **AI-Powered Content Generation**: Uses Google Gemini 2.0 Flash to generate professional descriptions and features
+- **Smart Tech Stack Detection**: Automatically detects and generates appropriate technology badges
 - **Live Preview**: Real-time markdown rendering as you type
-- **Multiple License Options**: MIT, Apache 2.0, and GPLv3 with proper badges
 - **Export Options**: Copy to clipboard or download as README.md file
 - **Responsive Design**: Works perfectly on desktop and mobile devices
 - **Dark Mode Support**: Automatic dark/light theme switching
@@ -55,7 +55,7 @@ npm run dev
 
 ## Usage
 
-1. **Fill out the form**: Enter your project name, description, features, and other details
+1. **Fill out the form**: Enter your project name, description, features, and live deployment link
 2. **Use AI generation**: Click the ✨ AI buttons next to any field to get AI-generated content
 3. **Preview**: See your README rendered in real-time in the preview section
 4. **Export**: Copy to clipboard or download as README.md file

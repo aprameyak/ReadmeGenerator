@@ -2,20 +2,12 @@
 import React, { useState } from "react";
 import type { ChangeEvent } from "react";
 
-const BADGES = [
-  "![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white&style=for-the-badge)",
-  "![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white&style=for-the-badge)",
-  "![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-06B6D4?logo=tailwindcss&logoColor=white&style=for-the-badge)",
-  "![Google AI](https://img.shields.io/badge/Google%20AI-4285F4?logo=google&logoColor=white&style=for-the-badge)",
-  "![Vercel](https://img.shields.io/badge/Vercel-000000?logo=vercel&logoColor=white&style=for-the-badge)",
-];
+
 
 type FormState = {
   projectName: string;
   description: string;
   features?: string;
-  installation: string;
-  usage: string;
   liveLink: string;
 };
 
@@ -23,43 +15,119 @@ function generateReadme({
   projectName,
   description,
   features,
-  installation,
-  usage,
   liveLink,
 }: {
   projectName: string;
   description: string;
   features?: string;
-  installation: string;
-  usage: string;
   liveLink: string;
 }): string {
+  // Generate tech stack badges based on common patterns
+  const techStack = generateTechStack(projectName, description, features);
+  
   return `# ${projectName || "Project Name"}
 
-${BADGES.join("\n")}
+${techStack}
 
 ## About\n\n${description || "Project description goes here."}
 
-## Features\n\n${features || "- Dynamic form fields for experience, education, and skills  \n- AI-enhanced work experience descriptions via Google's Gemini API  \n- Responsive design using Tailwind CSS  \n- Serverless API routes for handling resume data  \n- Form validation for complete and accurate input"}
+## Features\n\n${features || "List the main features of your project here."}
 
-## Technology Stack\n\n- **Frontend**: React.js (Next.js), TypeScript, Tailwind CSS  \n- **Backend**: Next.js API Routes  \n- **AI Integration**: Google Gemini API (for generating descriptions)  \n- **Deployment**: Vercel
-
-## Live Deployment\n\n- **View Here**: [${liveLink || "https://your-live-link.com/"}](https://${liveLink || "your-live-link.com/"})
-
-## Installation\n\n${installation || "Describe installation steps here."}
-
-## Usage\n\n${usage || "Describe usage instructions here."}
+${liveLink ? `## Live Deployment\n\n- **View Here**: [${liveLink}](https://${liveLink})` : ""}
 `;
+}
+
+function generateTechStack(projectName: string, description: string, features: string = ""): string {
+  const allText = `${projectName} ${description} ${features}`.toLowerCase();
+  
+  const techMap: { [key: string]: string } = {
+    'react': '![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)',
+    'next.js': '![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)',
+    'typescript': '![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)',
+    'javascript': '![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)',
+    'python': '![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)',
+    'node.js': '![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)',
+    'tailwind': '![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)',
+    'mongodb': '![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)',
+    'postgresql': '![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)',
+    'mysql': '![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)',
+    'firebase': '![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)',
+    'aws': '![AWS](https://img.shields.io/badge/AWS-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)',
+    'vercel': '![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)',
+    'netlify': '![Netlify](https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)',
+    'docker': '![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)',
+    'kubernetes': '![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)',
+    'git': '![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)',
+    'github': '![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)',
+    'html': '![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)',
+    'css': '![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)',
+    'sass': '![Sass](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white)',
+    'bootstrap': '![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)',
+    'jquery': '![jQuery](https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white)',
+    'redux': '![Redux](https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white)',
+    'vue.js': '![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D)',
+    'angular': '![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)',
+    'express': '![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)',
+    'django': '![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)',
+    'flask': '![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)',
+    'laravel': '![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)',
+    'php': '![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)',
+    'java': '![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)',
+    'c++': '![C++](https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)',
+    'c#': '![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white)',
+    'go': '![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)',
+    'rust': '![Rust](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)',
+    'swift': '![Swift](https://img.shields.io/badge/Swift-FA7343?style=for-the-badge&logo=swift&logoColor=white)',
+    'kotlin': '![Kotlin](https://img.shields.io/badge/Kotlin-0095D5?style=for-the-badge&logo=Kotlin&logoColor=white)',
+    'android': '![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)',
+    'ios': '![iOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white)',
+    'tensorflow': '![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)',
+    'pytorch': '![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)',
+    'opencv': '![OpenCV](https://img.shields.io/badge/OpenCV-27338e?style=for-the-badge&logo=opencv&logoColor=white)',
+    'pandas': '![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)',
+    'numpy': '![NumPy](https://img.shields.io/badge/Numpy-777BB4?style=for-the-badge&logo=numpy&logoColor=white)',
+    'scikit-learn': '![Scikit Learn](https://img.shields.io/badge/scikit_learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)',
+    'matplotlib': '![Matplotlib](https://img.shields.io/badge/Matplotlib-3776AB?style=for-the-badge&logo=matplotlib&logoColor=white)',
+    'plotly': '![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=for-the-badge&logo=plotly&logoColor=white)',
+    'jupyter': '![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white)',
+    'anaconda': '![Anaconda](https://img.shields.io/badge/Anaconda-342B029?style=for-the-badge&logo=anaconda&logoColor=white)',
+    'cohere': '![Cohere](https://img.shields.io/badge/Cohere-FF5C5C?style=for-the-badge&logo=cohere&logoColor=white)',
+    'openai': '![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)',
+    'gemini': '![Google AI](https://img.shields.io/badge/Google%20AI-4285F4?style=for-the-badge&logo=google&logoColor=white)',
+  };
+
+  const detectedTech: string[] = [];
+  
+  // Check for technologies in the text
+  Object.keys(techMap).forEach(tech => {
+    if (allText.includes(tech.toLowerCase())) {
+      detectedTech.push(techMap[tech]);
+    }
+  });
+
+  // If no tech detected, add some common ones based on context
+  if (detectedTech.length === 0) {
+    if (allText.includes('web') || allText.includes('frontend') || allText.includes('ui')) {
+      detectedTech.push(techMap['html'], techMap['css'], techMap['javascript']);
+    } else if (allText.includes('mobile') || allText.includes('app')) {
+      detectedTech.push(techMap['react'], techMap['javascript']);
+    } else if (allText.includes('data') || allText.includes('analysis')) {
+      detectedTech.push(techMap['python'], techMap['pandas']);
+    } else {
+      // Default tech stack
+      detectedTech.push(techMap['javascript'], techMap['html'], techMap['css']);
+    }
+  }
+
+  return detectedTech.join('\n');
 }
 
 export default function Home() {
   const [form, setForm] = useState<FormState>({
-    projectName: "ResuMaker",
-    description:
-      "**ResuMaker** is a dynamic web application built with **Next.js** and **TypeScript** that enables users to create professional resumes. It features **AI-enhanced descriptions** for work experiences, ensuring users can easily generate impactful bullet points for their job roles.",
-    installation: "",
-    usage: "",
-    liveLink: "resumaker-six.vercel.app/",
+    projectName: "",
+    description: "",
+    features: "",
+    liveLink: "",
   });
   const [readme, setReadme] = useState(() => generateReadme(form));
   const [loadingField, setLoadingField] = useState<string | null>(null);
@@ -89,17 +157,10 @@ export default function Home() {
     URL.revokeObjectURL(url);
   };
 
-  async function handleAIGenerate(field: "description" | "features" | "usage") {
+  async function handleAIGenerate(field: "description" | "features") {
     setLoadingField(field);
     setError("");
-    let prompt = "";
-    if (field === "description") {
-      prompt = `Write a concise, professional project description for a README about a web app called ${form.projectName}.`;
-    } else if (field === "features") {
-      prompt = `List the main features of a web app called ${form.projectName} for a README, in markdown bullet points.`;
-    } else if (field === "usage") {
-      prompt = `Write clear usage instructions for a web app called ${form.projectName} for a README.`;
-    }
+    
     try {
       const res = await fetch("/api/generate", {
         method: "POST",
@@ -107,8 +168,11 @@ export default function Home() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          prompt,
+          prompt: "",
           field,
+          projectData: {
+            projectName: form.projectName || "this project",
+          },
         }),
       });
       
@@ -186,7 +250,7 @@ export default function Home() {
                 onChange={e => {
                   setForm((prev) => {
                     const updated = { ...prev, features: e.target.value };
-                    setReadme(generateReadme({ ...updated, license: updated.license }));
+                    setReadme(generateReadme(updated));
                     return updated;
                   });
                 }}
@@ -204,28 +268,7 @@ export default function Home() {
               </button>
             </div>
           </label>
-          <label htmlFor="usage" className="font-medium flex flex-col gap-1">Usage Instructions
-            <div className="flex gap-2 items-center">
-              <textarea
-                id="usage"
-                className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                name="usage"
-                value={form.usage}
-                onChange={handleChange}
-                rows={2}
-              />
-              <button
-                type="button"
-                className="bg-purple-600 text-white rounded px-3 py-2 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center"
-                onClick={() => handleAIGenerate("usage")}
-                disabled={loadingField === "usage"}
-                aria-label="Generate usage with AI"
-              >
-                {loadingField === "usage" ? <span className="animate-spin mr-1">⏳</span> : <span className="mr-1">✨</span>}
-                AI
-              </button>
-            </div>
-          </label>
+
           <label htmlFor="liveLink" className="font-medium">Live Deployment Link
             <input
               id="liveLink"
