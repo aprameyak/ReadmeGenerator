@@ -102,27 +102,8 @@ export default function Home() {
     license: LICENSES[0],
   });
   const [readme, setReadme] = useState(() => generateReadme({ ...form, license: LICENSES[0] }));
-  const [apiKey, setApiKey] = useState<string>("");
   const [loadingField, setLoadingField] = useState<string | null>(null);
   const [error, setError] = useState<string>("");
-
-  // Load API key from localStorage on mount
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedKey = localStorage.getItem("ai_api_key") || "";
-      setApiKey(savedKey);
-    }
-  }, []);
-
-  const handleApiKeyChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setApiKey(e.target.value);
-  };
-
-  const handleApiKeySave = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("ai_api_key", apiKey);
-    }
-  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -169,47 +150,31 @@ export default function Home() {
       prompt = `Write clear usage instructions for a web app called ${form.projectName} for a README.`;
     }
     try {
-      let aiText = "";
-      if (apiKey.startsWith("sk-")) {
-        // OpenAI
-        const res = await fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
-          },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: prompt }],
-            max_tokens: 256,
-            temperature: 0.7,
-          }),
-        });
-        const data = await res.json();
-        aiText = data.choices?.[0]?.message?.content?.trim() || "";
-      } else if (apiKey) {
-        // Gemini (Google AI)
-        const res = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-          }),
-        });
-        const data = await res.json();
-        aiText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
-      } else {
-        setError("Please provide a valid API key for AI generation.");
-        setLoadingField(null);
-        return;
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          prompt,
+          field,
+        }),
+      });
+      
+      if (!res.ok) {
+        throw new Error("AI generation failed");
       }
+      
+      const data = await res.json();
+      const aiText = data.text || "";
+      
       setForm((prev) => {
         const updated = { ...prev, [field]: aiText };
         setReadme(generateReadme({ ...updated, license: updated.license }));
         return updated;
       });
     } catch {
-      setError("AI generation failed. Please check your API key and try again.");
+      setError("AI generation failed. Please try again.");
     } finally {
       setLoadingField(null);
     }
