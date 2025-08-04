@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, field } = await request.json();
+    const { prompt } = await request.json();
     
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
