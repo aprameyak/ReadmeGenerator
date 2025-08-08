@@ -26,6 +26,8 @@ function generateReadme({
   // Generate tech stack badges from user input
   const techBadges = generateTechBadges(techStack);
   
+  const normalizedLink = normalizeUrl(liveLink);
+  
   return `# ${projectName || "Project Name"}
 
 ${techBadges}
@@ -38,10 +40,19 @@ ${description || "Project description goes here."}
 
 ${features || "List the main features of your project here."}
 
-${liveLink ? `## Live Deployment
+${normalizedLink ? `## Live Deployment
 
-- **View Here**: [${liveLink}](https://${liveLink})` : ""}
+- **View Here**: [${normalizedLink}](https://${normalizedLink})` : ""}
 `;
+}
+
+function normalizeUrl(url: string): string {
+  if (!url.trim()) return "";
+  const cleaned = url.trim().replace(/^https?:\/\//, "");
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9-._]*[a-zA-Z0-9]\.[a-zA-Z]{2,}/.test(cleaned)) {
+    return "";
+  }
+  return cleaned;
 }
 
 function generateTechBadges(techStack: string): string {
@@ -107,11 +118,41 @@ function generateTechBadges(techStack: string): string {
 
   const techList = techStack.toLowerCase().split(/[,\s]+/).filter(tech => tech.trim());
   const badges: string[] = [];
+  const seen = new Set<string>();
 
   techList.forEach(tech => {
-    const cleanTech = tech.trim();
-    if (techMap[cleanTech]) {
+    let cleanTech = tech.trim();
+    
+    const variations: { [key: string]: string } = {
+      'nextjs': 'next.js',
+      'next': 'next.js',
+      'tailwindcss': 'tailwind',
+      'tailwind css': 'tailwind',
+      'nodejs': 'node.js',
+      'node': 'node.js',
+      'vuejs': 'vue.js',
+      'vue': 'vue.js',
+      'reactjs': 'react',
+      'js': 'javascript',
+      'ts': 'typescript',
+      'py': 'python',
+      'postgres': 'postgresql',
+      'mongo': 'mongodb',
+      'tf': 'tensorflow',
+      'sklearn': 'scikit-learn',
+      'k8s': 'kubernetes',
+      'scss': 'sass',
+      'express.js': 'express',
+      'expressjs': 'express'
+    };
+    
+    if (variations[cleanTech]) {
+      cleanTech = variations[cleanTech];
+    }
+    
+    if (techMap[cleanTech] && !seen.has(cleanTech)) {
       badges.push(techMap[cleanTech]);
+      seen.add(cleanTech);
     }
   });
 
@@ -119,16 +160,35 @@ function generateTechBadges(techStack: string): string {
 }
 
 export default function Home() {
-  const [form, setForm] = useState<FormState>({
-    projectName: "",
-    description: "",
-    features: "",
-    techStack: "",
-    liveLink: "",
+  const [form, setForm] = useState<FormState>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('readme-form');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {}
+      }
+    }
+    return {
+      projectName: "",
+      description: "",
+      features: "",
+      techStack: "",
+      liveLink: "",
+    };
   });
   const [readme, setReadme] = useState(() => generateReadme(form));
-  const [loadingField, setLoadingField] = useState<string | null>(null);
+
   const [error, setError] = useState<string>("");
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  // Auto-save to localStorage
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      localStorage.setItem('readme-form', JSON.stringify(form));
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [form]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -140,8 +200,14 @@ export default function Home() {
   };
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(readme);
-    // toast notification will be added in next step
+    try {
+      await navigator.clipboard.writeText(readme);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch {
+      setError("Failed to copy to clipboard");
+      setTimeout(() => setError(""), 3000);
+    }
   };
 
   const handleDownload = () => {
@@ -155,51 +221,21 @@ export default function Home() {
   };
 
   async function handleAIGenerate(field: "description" | "features") {
-    setLoadingField(field);
-    setError("");
-    
-    try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: "",
-          field,
-          projectData: {
-            projectName: form.projectName || "this project",
-          },
-        }),
-      });
-      
-      if (!res.ok) {
-        throw new Error("AI generation failed");
-      }
-      
-      const data = await res.json();
-      const aiText = data.text || "";
-      
-      setForm((prev) => {
-        const updated = { ...prev, [field]: aiText };
-        setReadme(generateReadme(updated));
-        return updated;
-      });
-    } catch {
-      setError("AI generation failed. Please try again.");
-    } finally {
-      setLoadingField(null);
+    if (!form.projectName.trim()) {
+      setError("Please enter a project name first");
+      setTimeout(() => setError(""), 3000);
+      return;
     }
+    
+    // AI generation removed for minimal implementation
   }
 
   return (
     <main className="min-h-screen flex flex-col md:flex-row items-start justify-center bg-white dark:bg-black text-black dark:text-white p-4 md:p-8 gap-8">
       <section className="w-full max-w-lg flex flex-col gap-4 bg-gray-50 dark:bg-gray-900 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-800">
         <h1 className="text-3xl font-bold mb-2 text-center">README Generator</h1>
-        <div className="mb-4 p-3 rounded bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-100 text-sm">
-          <strong>AI-Powered:</strong> This app uses Google&apos;s Gemini 2.0 Flash AI to generate professional content for your README files. Simply click the ✨ AI buttons next to any field to get AI-generated content.
-        </div>
-        {error && <div className="text-red-600 bg-red-50 border border-red-200 rounded p-2 text-sm">{error}</div>}
+        {error && <div className="text-red-600 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded p-2 text-sm">{error}</div>}
+        {copySuccess && <div className="text-green-600 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded p-2 text-sm">Copied to clipboard!</div>}
         <form className="flex flex-col gap-4" onSubmit={e => e.preventDefault()} aria-label="README Generator Form">
           <label htmlFor="projectName" className="font-medium">Project Name
             <input
@@ -226,56 +262,42 @@ export default function Home() {
             <div className="text-xs text-gray-500 mt-1">Enter technologies separated by commas (e.g., html, css, javascript)</div>
           </label>
           <label htmlFor="description" className="font-medium flex flex-col gap-1">Description
-            <div className="flex gap-2 items-center">
-              <textarea
-                id="description"
-                className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                name="description"
-                value={form.description}
-                onChange={handleChange}
-                rows={3}
-                required
-                aria-required="true"
-              />
-              <button
-                type="button"
-                className="bg-purple-600 text-white rounded px-3 py-2 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center"
-                onClick={() => handleAIGenerate("description")}
-                disabled={loadingField === "description"}
-                aria-label="Generate description with AI"
-              >
-                {loadingField === "description" ? <span className="animate-spin mr-1">⏳</span> : <span className="mr-1">✨</span>}
-                AI
-              </button>
-            </div>
+            <textarea
+              id="description"
+              className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              onBlur={async (e) => {
+                if (!e.target.value.trim()) {
+                  await handleAIGenerate("description");
+                }
+              }}
+              rows={3}
+              required
+              aria-required="true"
+            />
           </label>
           <label htmlFor="features" className="font-medium flex flex-col gap-1">Features
-            <div className="flex gap-2 items-center">
-              <textarea
-                id="features"
-                className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                name="features"
-                value={form.features || ""}
-                onChange={e => {
-                  setForm((prev) => {
-                    const updated = { ...prev, features: e.target.value };
-                    setReadme(generateReadme(updated));
-                    return updated;
-                  });
-                }}
-                rows={3}
-              />
-              <button
-                type="button"
-                className="bg-purple-600 text-white rounded px-3 py-2 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 flex items-center"
-                onClick={() => handleAIGenerate("features")}
-                disabled={loadingField === "features"}
-                aria-label="Generate features with AI"
-              >
-                {loadingField === "features" ? <span className="animate-spin mr-1">⏳</span> : <span className="mr-1">✨</span>}
-                AI
-              </button>
-            </div>
+            <textarea
+              id="features"
+              className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              name="features"
+              value={form.features || ""}
+              onChange={e => {
+                setForm((prev) => {
+                  const updated = { ...prev, features: e.target.value };
+                  setReadme(generateReadme(updated));
+                  return updated;
+                });
+              }}
+              onBlur={async (e) => {
+                if (!e.target.value.trim()) {
+                  await handleAIGenerate("features");
+                }
+              }}
+              rows={3}
+            />
           </label>
           <label htmlFor="liveLink" className="font-medium">Live Deployment Link
             <input
@@ -284,7 +306,7 @@ export default function Home() {
               name="liveLink"
               value={form.liveLink}
               onChange={handleChange}
-              placeholder="your-live-link.com"
+              placeholder="example.com"  
               autoComplete="off"
             />
           </label>
@@ -316,7 +338,7 @@ export default function Home() {
   );
 }
 
-function MarkdownPreview({ markdown }: { markdown: string }) {
+function MarkdownPreview({ markdown }: Readonly<{ markdown: string }>) {
   const [html, setHtml] = React.useState("");
   React.useEffect(() => {
     (async () => {
