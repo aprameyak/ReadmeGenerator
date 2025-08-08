@@ -48,7 +48,10 @@ ${normalizedLink ? `## Live Deployment
 
 function normalizeUrl(url: string): string {
   if (!url.trim()) return "";
-  const cleaned = url.trim().replace(/^https?:\/\//, "");
+  let cleaned = url.trim().replace(/^https?:\/\//, "");
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9-._]*[a-zA-Z0-9]\.[a-zA-Z]{2,}/.test(cleaned)) {
+    return "";
+  }
   return cleaned;
 }
 
@@ -120,16 +123,27 @@ function generateTechBadges(techStack: string): string {
   techList.forEach(tech => {
     let cleanTech = tech.trim();
     
-    // Handle common variations
     const variations: { [key: string]: string } = {
       'nextjs': 'next.js',
+      'next': 'next.js',
       'tailwindcss': 'tailwind',
+      'tailwind css': 'tailwind',
       'nodejs': 'node.js',
+      'node': 'node.js',
       'vuejs': 'vue.js',
+      'vue': 'vue.js',
       'reactjs': 'react',
       'js': 'javascript',
       'ts': 'typescript',
-      'py': 'python'
+      'py': 'python',
+      'postgres': 'postgresql',
+      'mongo': 'mongodb',
+      'tf': 'tensorflow',
+      'sklearn': 'scikit-learn',
+      'k8s': 'kubernetes',
+      'scss': 'sass',
+      'express.js': 'express',
+      'expressjs': 'express'
     };
     
     if (variations[cleanTech]) {
@@ -340,7 +354,7 @@ export default function Home() {
               name="liveLink"
               value={form.liveLink}
               onChange={handleChange}
-              placeholder="example.com (without https://)"  
+              placeholder="example.com"  
               autoComplete="off"
             />
           </label>
