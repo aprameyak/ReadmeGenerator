@@ -48,7 +48,7 @@ ${normalizedLink ? `## Live Deployment
 
 function normalizeUrl(url: string): string {
   if (!url.trim()) return "";
-  let cleaned = url.trim().replace(/^https?:\/\//, "");
+  const cleaned = url.trim().replace(/^https?:\/\//, "");
   if (!/^[a-zA-Z0-9][a-zA-Z0-9-._]*[a-zA-Z0-9]\.[a-zA-Z]{2,}/.test(cleaned)) {
     return "";
   }
@@ -178,7 +178,7 @@ export default function Home() {
     };
   });
   const [readme, setReadme] = useState(() => generateReadme(form));
-  const [loadingField, setLoadingField] = useState<string | null>(null);
+
   const [error, setError] = useState<string>("");
   const [copySuccess, setCopySuccess] = useState(false);
 
@@ -227,55 +227,7 @@ export default function Home() {
       return;
     }
     
-    setLoadingField(field);
-    setError("");
-    
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
-    
-    try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: "",
-          field,
-          projectData: {
-            projectName: form.projectName,
-            techStack: form.techStack,
-          },
-        }),
-        signal: controller.signal,
-      });
-      
-      clearTimeout(timeoutId);
-      
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "AI generation failed");
-      }
-      
-      const data = await res.json();
-      const aiText = data.text || "";
-      
-      setForm((prev) => {
-        const updated = { ...prev, [field]: aiText };
-        setReadme(generateReadme(updated));
-        return updated;
-      });
-    } catch (err) {
-      clearTimeout(timeoutId);
-      if (err instanceof Error && err.name === 'AbortError') {
-        setError("Request timed out. Please try again.");
-      } else {
-        setError("AI generation failed. Please try again.");
-      }
-      setTimeout(() => setError(""), 5000);
-    } finally {
-      setLoadingField(null);
-    }
+    // AI generation removed for minimal implementation
   }
 
   return (
@@ -386,7 +338,7 @@ export default function Home() {
   );
 }
 
-function MarkdownPreview({ markdown }: { markdown: string }) {
+function MarkdownPreview({ markdown }: Readonly<{ markdown: string }>) {
   const [html, setHtml] = React.useState("");
   React.useEffect(() => {
     (async () => {
