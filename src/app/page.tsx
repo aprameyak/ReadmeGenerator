@@ -120,35 +120,31 @@ function generateTechBadges(techStack: string): string {
   const badges: string[] = [];
   const seen = new Set<string>();
 
+  const variations: { [key: string]: string } = {
+    'nextjs': 'next.js',
+    'next': 'next.js',
+    'tailwindcss': 'tailwind',
+    'tailwind css': 'tailwind',
+    'nodejs': 'node.js',
+    'node': 'node.js',
+    'vuejs': 'vue.js',
+    'vue': 'vue.js',
+    'reactjs': 'react',
+    'js': 'javascript',
+    'ts': 'typescript',
+    'py': 'python',
+    'postgres': 'postgresql',
+    'mongo': 'mongodb',
+    'tf': 'tensorflow',
+    'sklearn': 'scikit-learn',
+    'k8s': 'kubernetes',
+    'scss': 'sass',
+    'express.js': 'express',
+    'expressjs': 'express'
+  };
+
   techList.forEach(tech => {
-    let cleanTech = tech.trim();
-    
-    const variations: { [key: string]: string } = {
-      'nextjs': 'next.js',
-      'next': 'next.js',
-      'tailwindcss': 'tailwind',
-      'tailwind css': 'tailwind',
-      'nodejs': 'node.js',
-      'node': 'node.js',
-      'vuejs': 'vue.js',
-      'vue': 'vue.js',
-      'reactjs': 'react',
-      'js': 'javascript',
-      'ts': 'typescript',
-      'py': 'python',
-      'postgres': 'postgresql',
-      'mongo': 'mongodb',
-      'tf': 'tensorflow',
-      'sklearn': 'scikit-learn',
-      'k8s': 'kubernetes',
-      'scss': 'sass',
-      'express.js': 'express',
-      'expressjs': 'express'
-    };
-    
-    if (variations[cleanTech]) {
-      cleanTech = variations[cleanTech];
-    }
+    const cleanTech = variations[tech.trim()] || tech.trim();
     
     if (techMap[cleanTech] && !seen.has(cleanTech)) {
       badges.push(techMap[cleanTech]);
