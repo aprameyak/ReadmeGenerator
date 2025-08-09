@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+type GenerateField = 'description' | 'features';
+type GenerateRequestBody = {
+  prompt?: string;
+  field: GenerateField;
+  projectData?: {
+    projectName?: string;
+  };
+};
+
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, field, projectData } = await request.json();
+    const { prompt, field, projectData } = (await request.json()) as GenerateRequestBody;
     
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -12,40 +21,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let systemPrompt = "";
-    if (field === "description") {
-      systemPrompt = `You are a professional README writer. Write a concise "About" section for a project called "${projectData.projectName}". 
+    let systemPrompt = '';
+    const projectName = projectData?.projectName?.trim() || 'the project';
 
-Follow this exact format:
-- Write 2-3 sentences explaining what the project does
-- Use **bold** for key technologies and concepts
-- Be professional and clear
-- Focus on the main purpose and value
-
-Example format:
-**ProjectName** is a [type of application] that [main purpose]. It uses **technology1** and **technology2** to [what it accomplishes]. [Additional context or benefit].
-
-Return only the description text, no additional formatting.`;
-    } else if (field === "features") {
-      systemPrompt = `You are a professional README writer. Create a "Features" section for a project called "${projectData.projectName}".
-
-Follow this exact format:
-- Write 4-6 bullet points using markdown format (- )
-- Each bullet should be specific and actionable
-- Focus on key capabilities and functionality
-- Be concise but informative
-
-Example format:
-- **Feature 1**: Brief description of what it does
-- **Feature 2**: Brief description of what it does
-- **Feature 3**: Brief description of what it does
-- **Feature 4**: Brief description of what it does
-
-Return only the bullet points, no additional formatting.`;
+    if (field === 'description') {
+      systemPrompt = `Role: Expert README author.
+Task: Write a concise About section for "${projectName}".
+Constraints:
+- Max 2 sentences
+- Explain what it does, who it's for, and the core value
+- Professional, plain markdown text only
+- No headings, lists, links, or extra commentary
+Output: Only the paragraph text.`;
+    } else if (field === 'features') {
+      systemPrompt = `Role: Expert README author.
+Task: List key features for "${projectName}".
+Constraints:
+- 4 to 6 bullets
+- Start each bullet with a strong verb (e.g., Build, Track, Automate)
+- One line per bullet; be specific; no trailing punctuation
+- Plain markdown, bullets must start with "- "
+Output: Only the bullet list.`;
     } else {
-      systemPrompt = prompt;
+      systemPrompt = prompt ?? '';
     }
 
+    const maxOutputTokens = field === 'features' ? 180 : 140;
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
       {
@@ -58,16 +59,16 @@ Return only the bullet points, no additional formatting.`;
             {
               parts: [
                 {
-                  text: systemPrompt
-                }
-              ]
-            }
+                  text: systemPrompt,
+                },
+              ],
+            },
           ],
           generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 256,
-          }
-        })
+            temperature: 0.4,
+            maxOutputTokens,
+          },
+        }),
       }
     );
 

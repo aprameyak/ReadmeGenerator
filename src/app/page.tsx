@@ -120,35 +120,31 @@ function generateTechBadges(techStack: string): string {
   const badges: string[] = [];
   const seen = new Set<string>();
 
+  const variations: { [key: string]: string } = {
+    'nextjs': 'next.js',
+    'next': 'next.js',
+    'tailwindcss': 'tailwind',
+    'tailwind css': 'tailwind',
+    'nodejs': 'node.js',
+    'node': 'node.js',
+    'vuejs': 'vue.js',
+    'vue': 'vue.js',
+    'reactjs': 'react',
+    'js': 'javascript',
+    'ts': 'typescript',
+    'py': 'python',
+    'postgres': 'postgresql',
+    'mongo': 'mongodb',
+    'tf': 'tensorflow',
+    'sklearn': 'scikit-learn',
+    'k8s': 'kubernetes',
+    'scss': 'sass',
+    'express.js': 'express',
+    'expressjs': 'express'
+  };
+
   techList.forEach(tech => {
-    let cleanTech = tech.trim();
-    
-    const variations: { [key: string]: string } = {
-      'nextjs': 'next.js',
-      'next': 'next.js',
-      'tailwindcss': 'tailwind',
-      'tailwind css': 'tailwind',
-      'nodejs': 'node.js',
-      'node': 'node.js',
-      'vuejs': 'vue.js',
-      'vue': 'vue.js',
-      'reactjs': 'react',
-      'js': 'javascript',
-      'ts': 'typescript',
-      'py': 'python',
-      'postgres': 'postgresql',
-      'mongo': 'mongodb',
-      'tf': 'tensorflow',
-      'sklearn': 'scikit-learn',
-      'k8s': 'kubernetes',
-      'scss': 'sass',
-      'express.js': 'express',
-      'expressjs': 'express'
-    };
-    
-    if (variations[cleanTech]) {
-      cleanTech = variations[cleanTech];
-    }
+    const cleanTech = variations[tech.trim()] || tech.trim();
     
     if (techMap[cleanTech] && !seen.has(cleanTech)) {
       badges.push(techMap[cleanTech]);
@@ -226,8 +222,37 @@ export default function Home() {
       setTimeout(() => setError(""), 3000);
       return;
     }
-    
-    // AI generation removed for minimal implementation
+
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          field,
+          projectData: { projectName: form.projectName },
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Request failed: ${res.status}`);
+      }
+      const data: { text?: string; error?: string } = await res.json();
+      const aiText = (data.text || "").trim();
+      if (!aiText) {
+        throw new Error("Empty AI response");
+      }
+
+      setForm((prev) => {
+        const updated = { ...prev, [field]: aiText } as FormState;
+        setReadme(generateReadme(updated));
+        return updated;
+      });
+    } catch (e) {
+      // Log for debugging and surface user-friendly message
+      console.error("AI generation failed", e);
+      setError("AI generation failed. Please try again.");
+      setTimeout(() => setError(""), 3000);
+    }
   }
 
   return (
@@ -237,7 +262,8 @@ export default function Home() {
         {error && <div className="text-red-600 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded p-2 text-sm">{error}</div>}
         {copySuccess && <div className="text-green-600 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded p-2 text-sm">Copied to clipboard!</div>}
         <form className="flex flex-col gap-4" onSubmit={e => e.preventDefault()} aria-label="README Generator Form">
-          <label htmlFor="projectName" className="font-medium">Project Name
+          <label htmlFor="projectName" className="font-medium flex flex-col gap-1">
+            <span>Project Name</span>
             <input
               id="projectName"
               className="mt-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -249,7 +275,8 @@ export default function Home() {
               autoComplete="off"
             />
           </label>
-          <label htmlFor="techStack" className="font-medium">Tech Stack
+          <label htmlFor="techStack" className="font-medium flex flex-col gap-1">
+            <span>Tech Stack</span>
             <input
               id="techStack"
               className="mt-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -261,7 +288,8 @@ export default function Home() {
             />
             <div className="text-xs text-gray-500 mt-1">Enter technologies separated by commas (e.g., html, css, javascript)</div>
           </label>
-          <label htmlFor="description" className="font-medium flex flex-col gap-1">Description
+          <label htmlFor="description" className="font-medium flex flex-col gap-1">
+            <span>Description</span>
             <textarea
               id="description"
               className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -278,7 +306,8 @@ export default function Home() {
               aria-required="true"
             />
           </label>
-          <label htmlFor="features" className="font-medium flex flex-col gap-1">Features
+          <label htmlFor="features" className="font-medium flex flex-col gap-1">
+            <span>Features</span>
             <textarea
               id="features"
               className="flex-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -299,7 +328,8 @@ export default function Home() {
               rows={3}
             />
           </label>
-          <label htmlFor="liveLink" className="font-medium">Live Deployment Link
+          <label htmlFor="liveLink" className="font-medium flex flex-col gap-1">
+            <span>Live Deployment Link</span>
             <input
               id="liveLink"
               className="mt-1 p-2 rounded border border-gray-300 dark:bg-gray-800 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
