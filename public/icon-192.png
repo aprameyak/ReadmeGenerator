@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <!-- Document background -->
+  <rect x="36" y="24" width="120" height="144" rx="12" fill="#3B82F6" stroke="#1E40AF" stroke-width="6"/>
+  
+  <!-- Document lines -->
+  <rect x="54" y="48" width="84" height="9" rx="4.5" fill="white"/>
+  <rect x="54" y="66" width="72" height="9" rx="4.5" fill="white"/>
+  <rect x="54" y="84" width="60" height="9" rx="4.5" fill="white"/>
+  <rect x="54" y="102" width="48" height="9" rx="4.5" fill="white"/>
+  <rect x="54" y="120" width="36" height="9" rx="4.5" fill="white"/>
+  
+  <!-- Magic wand -->
+  <path d="M132 36 L156 12 L168 24 L144 48 Z" fill="#F59E0B"/>
+  <circle cx="156" cy="18" r="6" fill="#F59E0B"/>
+  
+  <!-- Sparkles -->
+  <circle cx="144" cy="36" r="3" fill="#FCD34D"/>
+  <circle cx="156" cy="42" r="1.8" fill="#FCD34D"/>
+  <circle cx="138" cy="54" r="2.4" fill="#FCD34D"/>
+  <circle cx="150" cy="60" r="1.5" fill="#FCD34D"/>
+  
+  <!-- README text indicator -->
+  <text x="96" y="156" text-anchor="middle" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="white">R</text>
+  
+  <!-- Additional decorative elements -->
+  <circle cx="72" cy="138" r="3" fill="#E5E7EB" opacity="0.6"/>
+  <circle cx="120" cy="138" r="2" fill="#E5E7EB" opacity="0.6"/>
+</svg>
