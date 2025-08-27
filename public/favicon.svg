@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Document background -->
+  <rect x="6" y="4" width="20" height="24" rx="2" fill="#3B82F6" stroke="#1E40AF" stroke-width="1"/>
+  
+  <!-- Document lines -->
+  <rect x="9" y="8" width="14" height="1.5" rx="0.75" fill="white"/>
+  <rect x="9" y="11" width="12" height="1.5" rx="0.75" fill="white"/>
+  <rect x="9" y="14" width="10" height="1.5" rx="0.75" fill="white"/>
+  <rect x="9" y="17" width="8" height="1.5" rx="0.75" fill="white"/>
+  
+  <!-- Magic wand -->
+  <path d="M22 6 L26 2 L28 4 L24 8 Z" fill="#F59E0B"/>
+  <circle cx="26" cy="3" r="1" fill="#F59E0B"/>
+  
+  <!-- Sparkles -->
+  <circle cx="24" cy="6" r="0.5" fill="#FCD34D"/>
+  <circle cx="26" cy="7" r="0.3" fill="#FCD34D"/>
+  <circle cx="23" cy="9" r="0.4" fill="#FCD34D"/>
+  
+  <!-- README text indicator -->
+  <text x="16" y="26" text-anchor="middle" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="white">R</text>
+</svg>

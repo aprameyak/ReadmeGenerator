@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Document background -->
+  <rect x="96" y="64" width="320" height="384" rx="32" fill="#3B82F6" stroke="#1E40AF" stroke-width="16"/>
+  
+  <!-- Document lines -->
+  <rect x="144" y="128" width="224" height="24" rx="12" fill="white"/>
+  <rect x="144" y="176" width="192" height="24" rx="12" fill="white"/>
+  <rect x="144" y="224" width="160" height="24" rx="12" fill="white"/>
+  <rect x="144" y="272" width="128" height="24" rx="12" fill="white"/>
+  <rect x="144" y="320" width="96" height="24" rx="12" fill="white"/>
+  <rect x="144" y="368" width="64" height="24" rx="12" fill="white"/>
+  
+  <!-- Magic wand -->
+  <path d="M352 96 L416 32 L448 64 L384 128 Z" fill="#F59E0B"/>
+  <circle cx="416" cy="48" r="16" fill="#F59E0B"/>
+  
+  <!-- Sparkles -->
+  <circle cx="384" cy="96" r="8" fill="#FCD34D"/>
+  <circle cx="416" cy="112" r="4.8" fill="#FCD34D"/>
+  <circle cx="368" cy="144" r="6.4" fill="#FCD34D"/>
+  <circle cx="400" cy="160" r="4" fill="#FCD34D"/>
+  <circle cx="352" cy="176" r="5.6" fill="#FCD34D"/>
+  
+  <!-- README text indicator -->
+  <text x="256" y="416" text-anchor="middle" font-family="Arial, sans-serif" font-size="96" font-weight="bold" fill="white">R</text>
+  
+  <!-- Additional decorative elements -->
+  <circle cx="192" cy="368" r="8" fill="#E5E7EB" opacity="0.6"/>
+  <circle cx="320" cy="368" r="5.6" fill="#E5E7EB" opacity="0.6"/>
+  <circle cx="256" cy="96" r="6" fill="#FCD34D" opacity="0.8"/>
+</svg>
