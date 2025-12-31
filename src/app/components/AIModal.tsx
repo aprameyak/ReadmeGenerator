@@ -20,23 +20,107 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
   const [depth, setDepth] = useState<Depth>('standard');
   const [preserveFormatting, setPreserveFormatting] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async () => {
     setIsGenerating(true);
+    setError(null);
     
-    // Simulate AI generation with mock enhancement
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const enhancedData: FormData = {
-      ...currentFormData,
-      description: currentFormData.description || generateMockDescription(tone, depth),
-      features: currentFormData.features || generateMockFeatures(depth),
-      techStackDetails: currentFormData.techStackDetails || generateMockTechStack(depth),
-    };
-
-    setIsGenerating(false);
-    onGenerate(enhancedData);
-    onOpenChange(false);
+    try {
+      const enhancedData: FormData = { ...currentFormData };
+      
+      // Generate description if empty
+      if (!currentFormData.description.trim()) {
+        try {
+          const descResponse = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              field: 'description',
+              projectData: { projectName: currentFormData.projectName },
+              tone,
+              depth,
+            }),
+          });
+          
+          if (descResponse.ok) {
+            const descData = await descResponse.json();
+            if (descData.text) {
+              enhancedData.description = descData.text;
+            }
+          }
+        } catch (err) {
+          console.error('Failed to generate description:', err);
+        }
+      }
+      
+      // Generate features if empty
+      if (!currentFormData.features.trim()) {
+        try {
+          const featuresResponse = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              field: 'features',
+              projectData: { projectName: currentFormData.projectName },
+              tone,
+              depth,
+            }),
+          });
+          
+          if (featuresResponse.ok) {
+            const featuresData = await featuresResponse.json();
+            if (featuresData.text) {
+              enhancedData.features = featuresData.text;
+            }
+          }
+        } catch (err) {
+          console.error('Failed to generate features:', err);
+        }
+      }
+      
+      // Generate tech stack details if empty
+      if (!currentFormData.techStackDetails.trim()) {
+        try {
+          const techResponse = await fetch('/api/generate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              field: 'techStack',
+              projectData: { 
+                projectName: currentFormData.projectName,
+                techStack: currentFormData.techStack,
+              },
+              tone,
+              depth,
+            }),
+          });
+          
+          if (techResponse.ok) {
+            const techData = await techResponse.json();
+            if (techData.text) {
+              enhancedData.techStackDetails = techData.text;
+            }
+          }
+        } catch (err) {
+          console.error('Failed to generate tech stack:', err);
+        }
+      }
+      
+      // Check if we got any errors
+      const hasErrors = !enhancedData.description && !enhancedData.features && !enhancedData.techStackDetails;
+      if (hasErrors && (!currentFormData.description && !currentFormData.features && !currentFormData.techStackDetails)) {
+        setError('Failed to generate content. Please check your API key configuration.');
+      } else {
+        onGenerate(enhancedData);
+        onOpenChange(false);
+      }
+    } catch (error) {
+      console.error('AI generation error:', error);
+      setError('An error occurred while generating content. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -59,6 +143,12 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
           </div>
 
           <div className="space-y-6">
+            {error && (
+              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+              </div>
+            )}
+
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                 Tone
@@ -134,7 +224,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
                 {isGenerating ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Generating...
+                    Generating with AI...
                   </>
                 ) : (
                   <>
@@ -146,7 +236,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
             </div>
 
             <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
-              AI will enhance your existing content while preserving your project details
+              Powered by Google Gemini 1.5 Flash. AI will enhance your existing content while preserving your project details.
             </p>
           </div>
         </Dialog.Content>
@@ -154,37 +244,3 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
     </Dialog.Root>
   );
 }
-
-function generateMockDescription(tone: Tone, depth: Depth): string {
-  const base = "A modern, feature-rich application built with cutting-edge technologies.";
-  
-  if (tone === 'concise') {
-    return base;
-  } else if (tone === 'professional') {
-    return `${base} This project demonstrates best practices in software development, including clean architecture, comprehensive testing, and robust error handling.`;
-  } else {
-    return `${base} We've built this with love and attention to detail, making it easy for developers to get started and build amazing things! 🚀`;
-  }
-}
-
-function generateMockFeatures(depth: Depth): string {
-  if (depth === 'minimal') {
-    return 'Responsive design\nModern UI/UX\nFast performance';
-  } else if (depth === 'standard') {
-    return 'Responsive design with mobile-first approach\nSmooth page transitions and scroll animations\nInteractive UI elements with hover effects\nDynamic content loading\nSEO optimized\nPerformance optimized';
-  } else {
-    return 'Responsive design with mobile-first approach\nSmooth page transitions and scroll animations\nInteractive UI elements with hover effects\nDynamic content loading with TypeScript type safety\nModern theme with gradient accents\nSEO optimized with Next.js metadata\nPerformance optimized with Next.js Image component\nAccessibility features\nDark mode support';
-  }
-}
-
-function generateMockTechStack(depth: Depth): string {
-  if (depth === 'minimal') {
-    return 'Framework: Next.js\nLanguage: TypeScript\nStyling: Tailwind CSS';
-  } else if (depth === 'standard') {
-    return 'Framework: Next.js 14\nLanguage: TypeScript 5.3\nStyling: Tailwind CSS 3.4\nDeployment: Vercel';
-  } else {
-    return 'Framework: Next.js 14\nLanguage: TypeScript 5.3\nStyling: Tailwind CSS 3.4\nAnimations: Framer Motion 12.14\nDeployment: Vercel\nFont: Inter (Google Fonts)';
-  }
-}
-
-
