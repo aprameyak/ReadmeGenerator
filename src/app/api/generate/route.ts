@@ -1,16 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-type GenerateField = 'description' | 'features' | 'chat';
+type GenerateField = 'description' | 'features';
 type GenerateRequestBody = {
   prompt?: string;
   field: GenerateField;
-  currentReadme?: string;
   projectData?: {
     projectName?: string;
-    description?: string;
-    features?: string;
-    techStack?: string;
-    liveLink?: string;
   };
 };
 
@@ -47,30 +42,11 @@ Constraints:
 - One line per bullet; be specific; no trailing punctuation
 - Plain markdown, bullets must start with "- "
 Output: Only the bullet list.`;
-    } else if (field === 'chat') {
-      const currentReadme = (await request.clone().json()).currentReadme || '';
-      systemPrompt = `Role: Expert README editor assistant.
-You help developers refine their README files through natural language requests.
-
-Current README:
-\`\`\`markdown
-${currentReadme}
-\`\`\`
-
-User request: ${prompt}
-
-Instructions:
-- Understand what the user wants to change/add/remove
-- Apply the requested changes to the README
-- Return the COMPLETE updated README wrapped in \`\`\`markdown code block
-- After the code block, briefly explain what you changed (1-2 sentences)
-- Keep the existing structure unless asked to change it
-- Be helpful and make smart improvements based on the request`;
     } else {
       systemPrompt = prompt ?? '';
     }
 
-    const maxOutputTokens = field === 'chat' ? 1500 : field === 'features' ? 180 : 140;
+    const maxOutputTokens = field === 'features' ? 180 : 140;
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
       {

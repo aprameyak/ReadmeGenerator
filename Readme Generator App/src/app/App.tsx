@@ -1,0 +1,137 @@
+import { useState } from 'react';
+import { ThemeProvider } from 'next-themes';
+import { Moon, Sun, ArrowLeft } from 'lucide-react';
+import { LandingPage } from './components/LandingPage';
+import { TemplateSelector } from './components/TemplateSelector';
+import { InputSection, FormData } from './components/InputSection';
+import { MarkdownPreview } from './components/MarkdownPreview';
+import { AIModal } from './components/AIModal';
+import { templates } from './components/templates';
+
+function App() {
+  const [showApp, setShowApp] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(templates[0]);
+  const [formData, setFormData] = useState<FormData>(selectedTemplate.defaultContent);
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [useAI, setUseAI] = useState(false);
+
+  const handleTemplateChange = (template: typeof templates[0]) => {
+    setSelectedTemplate(template);
+    setFormData(template.defaultContent);
+  };
+
+  const handleAIGenerate = (enhancedData: FormData) => {
+    setFormData(enhancedData);
+    setUseAI(true);
+  };
+
+  const handleReset = () => {
+    setFormData(selectedTemplate.defaultContent);
+    setUseAI(false);
+  };
+
+  if (!showApp) {
+    return (
+      <ThemeProvider attribute="class" defaultTheme="light">
+        <LandingPage onGetStarted={() => setShowApp(true)} />
+      </ThemeProvider>
+    );
+  }
+
+  return (
+    <ThemeProvider attribute="class" defaultTheme="light">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+        <AppHeader onBack={() => setShowApp(false)} onReset={handleReset} />
+        
+        <div className="container mx-auto px-6 py-6">
+          <div className="grid lg:grid-cols-[300px_1fr_1fr] gap-6 h-[calc(100vh-120px)]">
+            {/* Left Panel - Template Selection */}
+            <div className="overflow-y-auto bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800">
+              <TemplateSelector
+                selectedTemplate={selectedTemplate}
+                onSelectTemplate={handleTemplateChange}
+              />
+            </div>
+
+            {/* Center Panel - Input */}
+            <div className="overflow-y-auto bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800">
+              <InputSection
+                template={selectedTemplate}
+                formData={formData}
+                onFormDataChange={setFormData}
+                onOpenAIModal={() => setAiModalOpen(true)}
+                useAI={useAI}
+                onToggleAI={setUseAI}
+              />
+            </div>
+
+            {/* Right Panel - Preview */}
+            <div className="overflow-hidden bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 flex flex-col">
+              <MarkdownPreview formData={formData} template={selectedTemplate} />
+            </div>
+          </div>
+        </div>
+
+        <AIModal
+          open={aiModalOpen}
+          onOpenChange={setAiModalOpen}
+          currentFormData={formData}
+          onGenerate={handleAIGenerate}
+        />
+      </div>
+    </ThemeProvider>
+  );
+}
+
+function AppHeader({ onBack, onReset }: { onBack: () => void; onReset: () => void }) {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    document.documentElement.classList.toggle('dark');
+  };
+
+  return (
+    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onBack}
+              className="flex items-center gap-2 px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </button>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              README Studio
+            </h1>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onReset}
+              className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              Reset
+            </button>
+            <button
+              onClick={toggleTheme}
+              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? (
+                <Moon className="w-5 h-5 text-slate-600" />
+              ) : (
+                <Sun className="w-5 h-5 text-slate-400" />
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+export default App;
