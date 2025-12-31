@@ -89,9 +89,9 @@ Output only the technology stack items, one per line, nothing else.`;
       maxOutputTokens = depth === 'minimal' ? 150 : depth === 'standard' ? 200 : 250;
     }
 
-    // Use Gemini 1.5 Flash - the best free model
+    // Use Gemini 2.0 Flash
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: {

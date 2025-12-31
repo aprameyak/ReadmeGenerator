@@ -4,8 +4,6 @@ interface InputSectionProps {
   formData: FormData;
   onFormDataChange: (data: FormData) => void;
   onOpenAIModal: () => void;
-  useAI: boolean;
-  onToggleAI: (value: boolean) => void;
 }
 
 export interface FormData {
@@ -21,8 +19,6 @@ export function InputSection({
   formData,
   onFormDataChange,
   onOpenAIModal,
-  useAI,
-  onToggleAI,
 }: InputSectionProps) {
   const handleChange = (field: keyof FormData, value: string) => {
     onFormDataChange({ ...formData, [field]: value });

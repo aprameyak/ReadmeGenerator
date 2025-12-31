@@ -13,16 +13,13 @@ export default function Home() {
   const [showApp, setShowApp] = useState(false);
   const [formData, setFormData] = useState<FormData>(defaultFormContent);
   const [aiModalOpen, setAiModalOpen] = useState(false);
-  const [useAI, setUseAI] = useState(false);
 
   const handleAIGenerate = (enhancedData: FormData) => {
     setFormData(enhancedData);
-    setUseAI(true);
   };
 
   const handleReset = () => {
     setFormData(defaultFormContent);
-    setUseAI(false);
   };
 
   if (!showApp) {
@@ -46,8 +43,6 @@ export default function Home() {
                 formData={formData}
                 onFormDataChange={setFormData}
                 onOpenAIModal={() => setAiModalOpen(true)}
-                useAI={useAI}
-                onToggleAI={setUseAI}
               />
             </div>
 

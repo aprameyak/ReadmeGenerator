@@ -236,7 +236,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
             </div>
 
             <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
-              Powered by Google Gemini 1.5 Flash. AI will enhance your existing content while preserving your project details.
+              Powered by Google Gemini 2.0 Flash. AI will enhance your existing content while preserving your project details.
             </p>
           </div>
         </Dialog.Content>
