@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { X, Sparkles, Loader2 } from 'lucide-react';
@@ -178,3 +180,5 @@ function generateMockInstallation(depth: Depth): string {
 function generateMockUsage(tone: Tone, depth: Depth): string {
   return '```javascript\nimport { createApp } from \'./lib\';\n\nconst app = createApp({\n  apiKey: \'your-api-key\',\n  environment: \'production\'\n});\n\nawait app.initialize();\nconsole.log(\'Application ready!\');\n```';
 }
+
+

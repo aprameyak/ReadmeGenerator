@@ -1,9 +1,6 @@
-import { useState } from 'react';
 import { Sparkles } from 'lucide-react';
-import { Template } from './templates';
 
 interface InputSectionProps {
-  template: Template;
   formData: FormData;
   onFormDataChange: (data: FormData) => void;
   onOpenAIModal: () => void;
@@ -21,7 +18,6 @@ export interface FormData {
 }
 
 export function InputSection({
-  template,
   formData,
   onFormDataChange,
   onOpenAIModal,
@@ -132,3 +128,5 @@ export function InputSection({
     </div>
   );
 }
+
+

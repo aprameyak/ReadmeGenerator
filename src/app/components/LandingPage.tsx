@@ -19,8 +19,8 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           </h1>
 
           <p className="text-xl text-slate-600 dark:text-slate-400 mb-12 max-w-2xl mx-auto">
-            Create professional, comprehensive README files with customizable templates, 
-            structured input fields, and optional AI enhancement.
+            Create professional, comprehensive README files with structured input fields 
+            and optional AI enhancement.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
@@ -30,12 +30,6 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             >
               Start Generating
             </button>
-            <button
-              onClick={onGetStarted}
-              className="px-8 py-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 rounded-lg transition-colors"
-            >
-              View Templates
-            </button>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
@@ -43,9 +37,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
                 <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-white">Templates</h3>
+              <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-white">Structured Input</h3>
               <p className="text-slate-600 dark:text-slate-400">
-                Choose from professionally designed templates for different project types
+                Fill in your project details with our intuitive form interface
               </p>
             </div>
 
@@ -74,3 +68,5 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
     </div>
   );
 }
+
+

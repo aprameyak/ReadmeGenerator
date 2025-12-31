@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://readme-generator.vercel.app'),
   title: "README Generator - AI-Powered Documentation Tool",
   description: "Create professional README files with AI-powered content generation using Google Gemini 2.0 Flash. Features smart tech stack badges, live preview, and export options.",
   icons: {
@@ -52,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

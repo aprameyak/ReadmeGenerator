@@ -1,17 +1,18 @@
+'use client';
+
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import * as Tabs from '@radix-ui/react-tabs';
 import { Copy, Download, Check } from 'lucide-react';
 import { FormData } from './InputSection';
-import { Template } from './templates';
+import { README_SECTIONS } from './templates';
 
 interface MarkdownPreviewProps {
   formData: FormData;
-  template: Template;
 }
 
-export function MarkdownPreview({ formData, template }: MarkdownPreviewProps) {
+export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
   const [activeTab, setActiveTab] = useState('preview');
   const [copied, setCopied] = useState(false);
 
@@ -31,11 +32,11 @@ export function MarkdownPreview({ formData, template }: MarkdownPreviewProps) {
       markdown += `## Usage\n\n${formData.usage}\n\n`;
     }
 
-    if (template.sections.includes('Features')) {
+    if (README_SECTIONS.includes('Features')) {
       markdown += `## Features\n\n- Feature 1\n- Feature 2\n- Feature 3\n\n`;
     }
 
-    if (template.sections.includes('Contributing')) {
+    if (README_SECTIONS.includes('Contributing')) {
       markdown += `## Contributing\n\nContributions are welcome! Please feel free to submit a Pull Request.\n\n`;
     }
 
@@ -134,3 +135,5 @@ export function MarkdownPreview({ formData, template }: MarkdownPreviewProps) {
     </div>
   );
 }
+
+
