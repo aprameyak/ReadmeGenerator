@@ -30,8 +30,8 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
     const enhancedData: FormData = {
       ...currentFormData,
       description: currentFormData.description || generateMockDescription(tone, depth),
-      installation: currentFormData.installation || generateMockInstallation(depth),
-      usage: currentFormData.usage || generateMockUsage(tone, depth),
+      features: currentFormData.features || generateMockFeatures(depth),
+      techStackDetails: currentFormData.techStackDetails || generateMockTechStack(depth),
     };
 
     setIsGenerating(false);
@@ -46,7 +46,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-2xl p-6 w-full max-w-md z-50 max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <Dialog.Title className="text-xl font-semibold text-slate-900 dark:text-white">
@@ -70,7 +70,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
                     onClick={() => setTone(t)}
                     className={`px-4 py-2 rounded-lg border-2 capitalize transition-colors ${
                       tone === t
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'
+                        ? 'border-pink-500 bg-pink-50 dark:bg-pink-900/20 text-pink-700 dark:text-pink-300'
                         : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500 text-slate-700 dark:text-slate-300'
                     }`}
                   >
@@ -91,7 +91,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
                     onClick={() => setDepth(d)}
                     className={`w-full text-left px-4 py-3 rounded-lg border-2 capitalize transition-colors ${
                       depth === d
-                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                        ? 'border-pink-500 bg-pink-50 dark:bg-pink-900/20'
                         : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
                     }`}
                   >
@@ -112,7 +112,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
                   type="checkbox"
                   checked={preserveFormatting}
                   onChange={(e) => setPreserveFormatting(e.target.checked)}
-                  className="w-5 h-5 rounded border-slate-300 dark:border-slate-600 text-blue-600 focus:ring-blue-500"
+                  className="w-5 h-5 rounded border-slate-300 dark:border-slate-600 text-pink-600 focus:ring-pink-500"
                 />
                 <div>
                   <div className="text-sm font-medium text-slate-900 dark:text-white">
@@ -129,7 +129,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
               <button
                 onClick={handleGenerate}
                 disabled={isGenerating}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-slate-400 disabled:to-slate-500 text-white rounded-lg transition-colors shadow-lg disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 disabled:from-slate-400 disabled:to-slate-500 text-white rounded-lg transition-colors shadow-lg disabled:cursor-not-allowed"
               >
                 {isGenerating ? (
                   <>
@@ -167,18 +167,24 @@ function generateMockDescription(tone: Tone, depth: Depth): string {
   }
 }
 
-function generateMockInstallation(depth: Depth): string {
+function generateMockFeatures(depth: Depth): string {
   if (depth === 'minimal') {
-    return '```bash\nnpm install\n```';
+    return 'Responsive design\nModern UI/UX\nFast performance';
   } else if (depth === 'standard') {
-    return '```bash\n# Clone the repository\ngit clone https://github.com/username/project.git\n\n# Install dependencies\ncd project\nnpm install\n\n# Start development server\nnpm run dev\n```';
+    return 'Responsive design with mobile-first approach\nSmooth page transitions and scroll animations\nInteractive UI elements with hover effects\nDynamic content loading\nSEO optimized\nPerformance optimized';
   } else {
-    return '```bash\n# Clone the repository\ngit clone https://github.com/username/project.git\n\n# Navigate to project directory\ncd project\n\n# Install dependencies\nnpm install\n# or using yarn\nyarn install\n\n# Set up environment variables\ncp .env.example .env\n# Edit .env with your configuration\n\n# Start development server\nnpm run dev\n# Server will start on http://localhost:3000\n```';
+    return 'Responsive design with mobile-first approach\nSmooth page transitions and scroll animations\nInteractive UI elements with hover effects\nDynamic content loading with TypeScript type safety\nModern theme with gradient accents\nSEO optimized with Next.js metadata\nPerformance optimized with Next.js Image component\nAccessibility features\nDark mode support';
   }
 }
 
-function generateMockUsage(tone: Tone, depth: Depth): string {
-  return '```javascript\nimport { createApp } from \'./lib\';\n\nconst app = createApp({\n  apiKey: \'your-api-key\',\n  environment: \'production\'\n});\n\nawait app.initialize();\nconsole.log(\'Application ready!\');\n```';
+function generateMockTechStack(depth: Depth): string {
+  if (depth === 'minimal') {
+    return 'Framework: Next.js\nLanguage: TypeScript\nStyling: Tailwind CSS';
+  } else if (depth === 'standard') {
+    return 'Framework: Next.js 14\nLanguage: TypeScript 5.3\nStyling: Tailwind CSS 3.4\nDeployment: Vercel';
+  } else {
+    return 'Framework: Next.js 14\nLanguage: TypeScript 5.3\nStyling: Tailwind CSS 3.4\nAnimations: Framer Motion 12.14\nDeployment: Vercel\nFont: Inter (Google Fonts)';
+  }
 }
 
 

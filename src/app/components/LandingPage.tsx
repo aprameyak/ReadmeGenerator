@@ -6,10 +6,10 @@ interface LandingPageProps {
 
 export function LandingPage({ onGetStarted }: LandingPageProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-pink-50 to-rose-50 dark:from-slate-950 dark:via-slate-900 dark:to-rose-950">
       <div className="container mx-auto px-6 py-20">
         <div className="text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full mb-8">
+          <div className="inline-flex items-center gap-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full mb-8">
             <Sparkles className="w-4 h-4" />
             <span className="text-sm">AI-Powered Documentation</span>
           </div>
@@ -26,7 +26,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
             <button
               onClick={onGetStarted}
-              className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-lg hover:shadow-xl"
+              className="px-8 py-4 bg-pink-600 hover:bg-pink-700 text-white rounded-lg transition-colors shadow-lg hover:shadow-xl"
             >
               Start Generating
             </button>
@@ -34,8 +34,8 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
 
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700">
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
-                <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-lg flex items-center justify-center mb-4">
+                <FileText className="w-6 h-6 text-pink-600 dark:text-pink-400" />
               </div>
               <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-white">Structured Input</h3>
               <p className="text-slate-600 dark:text-slate-400">

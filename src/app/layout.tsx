@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "Create professional README files with AI-powered content generation using Google Gemini 2.0 Flash. Features smart tech stack badges, live preview, and export options.",
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/logo.svg', type: 'image/svg+xml' },
       { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
       { url: '/icon-512.png', sizes: '512x512', type: 'image/png' }
     ],

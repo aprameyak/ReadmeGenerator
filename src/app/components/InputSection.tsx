@@ -11,10 +11,10 @@ interface InputSectionProps {
 export interface FormData {
   projectName: string;
   description: string;
-  techStack: string;
-  installation: string;
-  usage: string;
-  license: string;
+  techStack: string; // Comma-separated for badges
+  features: string; // Newline-separated features
+  techStackDetails: string; // Detailed tech stack with versions
+  deploymentUrl: string;
 }
 
 export function InputSection({
@@ -34,7 +34,7 @@ export function InputSection({
         <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Project Details</h2>
         <button
           onClick={onOpenAIModal}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg transition-colors shadow-md"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-lg transition-colors shadow-md"
         >
           <Sparkles className="w-4 h-4" />
           Generate with AI
@@ -50,83 +50,79 @@ export function InputSection({
             type="text"
             value={formData.projectName}
             onChange={(e) => handleChange('projectName', e.target.value)}
-            placeholder="my-awesome-project"
-            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors text-slate-900 dark:text-white"
+            placeholder="Portfolio"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-colors text-slate-900 dark:text-white"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-            Project Description *
+            About / Description *
           </label>
           <textarea
             value={formData.description}
             onChange={(e) => handleChange('description', e.target.value)}
-            placeholder="A brief description of what your project does..."
+            placeholder="A brief description of your project..."
             rows={4}
-            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors text-slate-900 dark:text-white resize-none"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-colors text-slate-900 dark:text-white resize-none"
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-            Tech Stack
+            Tech Stack (for badges)
           </label>
           <input
             type="text"
             value={formData.techStack}
             onChange={(e) => handleChange('techStack', e.target.value)}
-            placeholder="React, TypeScript, Tailwind CSS"
-            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors text-slate-900 dark:text-white"
+            placeholder="Next.js, TypeScript, Tailwind CSS, Framer Motion, Vercel"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-colors text-slate-900 dark:text-white"
           />
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Comma-separated list (e.g., Next.js, TypeScript, Tailwind CSS)</p>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-            Installation Steps
+            Features
           </label>
           <textarea
-            value={formData.installation}
-            onChange={(e) => handleChange('installation', e.target.value)}
-            placeholder="Installation instructions..."
+            value={formData.features}
+            onChange={(e) => handleChange('features', e.target.value)}
+            placeholder="Responsive design with mobile-first approach&#10;Smooth page transitions and scroll animations&#10;Interactive UI elements with hover effects"
             rows={6}
-            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors font-mono text-sm text-slate-900 dark:text-white resize-none"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-colors text-slate-900 dark:text-white resize-none"
           />
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">One feature per line (each line becomes a bullet point)</p>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-            Usage Examples
+            Technology Stack (Detailed)
           </label>
           <textarea
-            value={formData.usage}
-            onChange={(e) => handleChange('usage', e.target.value)}
-            placeholder="Usage examples..."
+            value={formData.techStackDetails}
+            onChange={(e) => handleChange('techStackDetails', e.target.value)}
+            placeholder="Framework: Next.js 14&#10;Language: TypeScript 5.3&#10;Styling: Tailwind CSS 3.4&#10;Animations: Framer Motion 12.14"
             rows={6}
-            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors font-mono text-sm text-slate-900 dark:text-white resize-none"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-colors font-mono text-sm text-slate-900 dark:text-white resize-none"
           />
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">One item per line in format: Category: Technology Version</p>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-            License
+            Deployment URL
           </label>
-          <select
-            value={formData.license}
-            onChange={(e) => handleChange('license', e.target.value)}
-            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors text-slate-900 dark:text-white"
-          >
-            <option value="MIT">MIT</option>
-            <option value="Apache-2.0">Apache 2.0</option>
-            <option value="GPL-3.0">GPL 3.0</option>
-            <option value="BSD-3-Clause">BSD 3-Clause</option>
-            <option value="ISC">ISC</option>
-            <option value="Proprietary">Proprietary</option>
-          </select>
+          <input
+            type="text"
+            value={formData.deploymentUrl}
+            onChange={(e) => handleChange('deploymentUrl', e.target.value)}
+            placeholder="https://your-project.vercel.app"
+            className="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-colors text-slate-900 dark:text-white"
+          />
         </div>
       </div>
     </div>
   );
 }
-
-

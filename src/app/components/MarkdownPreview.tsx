@@ -6,7 +6,7 @@ import remarkGfm from 'remark-gfm';
 import * as Tabs from '@radix-ui/react-tabs';
 import { Copy, Download, Check } from 'lucide-react';
 import { FormData } from './InputSection';
-import { README_SECTIONS } from './templates';
+import { generateTechBadges } from './templates';
 
 interface MarkdownPreviewProps {
   formData: FormData;
@@ -18,29 +18,58 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
 
   const generateMarkdown = () => {
     let markdown = `# ${formData.projectName || 'Project Name'}\n\n`;
-    markdown += `${formData.description || 'Project description goes here.'}\n\n`;
-
-    if (formData.techStack) {
-      markdown += `## Tech Stack\n\n${formData.techStack}\n\n`;
+    
+    // Tech Stack Badges
+    const badges = generateTechBadges(formData.techStack);
+    if (badges) {
+      markdown += `${badges}\n\n`;
     }
-
-    if (formData.installation) {
-      markdown += `## Installation\n\n${formData.installation}\n\n`;
+    
+    markdown += `---\n\n`;
+    
+    // About Section
+    markdown += `## About\n\n`;
+    if (formData.description) {
+      markdown += `${formData.description}\n\n`;
+    } else {
+      markdown += `**${formData.projectName || 'Project'}** is a modern project built with cutting-edge technologies.\n\n`;
     }
-
-    if (formData.usage) {
-      markdown += `## Usage\n\n${formData.usage}\n\n`;
+    
+    markdown += `---\n\n`;
+    
+    // Features Section
+    if (formData.features) {
+      markdown += `## Features\n\n`;
+      const features = formData.features.split('\n').filter(f => f.trim());
+      features.forEach(feature => {
+        if (feature.trim()) {
+          markdown += `- ${feature.trim()}\n`;
+        }
+      });
+      markdown += `\n`;
     }
-
-    if (README_SECTIONS.includes('Features')) {
-      markdown += `## Features\n\n- Feature 1\n- Feature 2\n- Feature 3\n\n`;
+    
+    markdown += `---\n\n`;
+    
+    // Technology Stack Section
+    if (formData.techStackDetails) {
+      markdown += `## Technology Stack\n\n`;
+      const techDetails = formData.techStackDetails.split('\n').filter(t => t.trim());
+      techDetails.forEach(tech => {
+        if (tech.trim()) {
+          markdown += `- **${tech.trim()}**\n`;
+        }
+      });
+      markdown += `\n`;
     }
-
-    if (README_SECTIONS.includes('Contributing')) {
-      markdown += `## Contributing\n\nContributions are welcome! Please feel free to submit a Pull Request.\n\n`;
+    
+    // Deployment Section
+    if (formData.deploymentUrl) {
+      const url = formData.deploymentUrl.trim();
+      const displayUrl = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      markdown += `## Deployment\n\n`;
+      markdown += `Visit the live site at [${displayUrl}](${url.startsWith('http') ? url : `https://${url}`})\n`;
     }
-
-    markdown += `## License\n\n${formData.license}\n`;
 
     return markdown;
   };
@@ -88,7 +117,7 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
           </button>
           <button
             onClick={handleDownload}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg transition-colors"
           >
             <Download className="w-4 h-4" />
             Download
@@ -102,7 +131,7 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
             value="preview"
             className={`px-4 py-2 border-b-2 transition-colors ${
               activeTab === 'preview'
-                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                ? 'border-pink-500 text-pink-600 dark:text-pink-400'
                 : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
@@ -112,7 +141,7 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
             value="raw"
             className={`px-4 py-2 border-b-2 transition-colors ${
               activeTab === 'raw'
-                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                ? 'border-pink-500 text-pink-600 dark:text-pink-400'
                 : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
@@ -135,5 +164,3 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
     </div>
   );
 }
-
-
