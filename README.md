@@ -31,7 +31,7 @@
 - **Framework**: Next.js 16
 - **Language**: TypeScript 5
 - **Styling**: Tailwind CSS 4
-- **AI**: Google Gemini 2.0 Flash API
+- **AI**: Google Gemini API
 - **Deployment**: Vercel
 
 ---
