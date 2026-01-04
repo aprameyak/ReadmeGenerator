@@ -10,13 +10,13 @@
 
 ## About
 
-**README Studio** is a modern, AI-powered README generator built with **Next.js, TypeScript, and Tailwind CSS**. It helps developers create professional README files with structured input fields and optional AI enhancement using Google's Gemini 2.0 Flash model.
+**README Studio** is a modern, AI-powered README generator built with **Next.js, TypeScript, and Tailwind CSS**. It helps developers create professional README files with structured input fields and optional AI enhancement using Google's Gemini.
 
 ---
 
 ## Features
 
-- **AI-Powered Generation**: Uses Google Gemini 2.0 Flash to generate descriptions, features, and tech stack details
+- **AI-Powered Generation**: Uses Google Gemini to generate descriptions, features, and tech stack details
 - **Live Preview**: Real-time markdown preview with syntax highlighting
 - **Portfolio Template**: Pre-configured template matching modern portfolio README structure
 - **Tech Stack Badges**: Automatic generation of shields.io badges for popular technologies
