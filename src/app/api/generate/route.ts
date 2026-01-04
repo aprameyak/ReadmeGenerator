@@ -187,7 +187,7 @@ IMPORTANT: Only include fields in the JSON that should be updated based on the u
       
       const parsed = JSON.parse(jsonText);
 
-      // Only return fields that were explicitly returned by AI (safety check)
+      // Only return fields that were explicitly returned (safety check)
       // Ensure all values are strings to prevent type errors
       const result: Partial<{
         projectName: string;
@@ -207,11 +207,11 @@ IMPORTANT: Only include fields in the JSON that should be updated based on the u
 
       return NextResponse.json(result);
     } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
-      throw new Error('Failed to parse AI response. Please try again with a clearer description.');
+      console.error('Failed to parse response:', parseError);
+      throw new Error('Failed to parse response. Please try again with a clearer description.');
     }
   } catch (error) {
-    console.error('AI generation error:', error);
+    console.error('Content generation error:', error);
     return NextResponse.json(
       { 
         error: error instanceof Error ? error.message : 'Failed to generate content. Please check your API key and try again.' 

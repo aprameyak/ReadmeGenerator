@@ -33,7 +33,7 @@ export function InputSection({
           className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-lg transition-colors shadow-md"
         >
           <Sparkles className="w-4 h-4" />
-          Generate with AI
+          Smart Generate
         </button>
       </div>
 

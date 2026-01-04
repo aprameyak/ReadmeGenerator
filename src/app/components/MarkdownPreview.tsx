@@ -4,7 +4,7 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import * as Tabs from '@radix-ui/react-tabs';
-import { Copy, Download, Check } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import { FormData } from './InputSection';
 import { generateTechBadges } from './templates';
 
@@ -82,18 +82,6 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleDownload = () => {
-    const blob = new Blob([markdown], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'README.md';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
@@ -115,13 +103,7 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
               </>
             )}
           </button>
-          <button
-            onClick={handleDownload}
-            className="flex items-center gap-2 px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            Download
-          </button>
+      
         </div>
       </div>
 

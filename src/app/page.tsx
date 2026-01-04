@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { ThemeProvider, useTheme } from 'next-themes';
-import { Moon, Sun, ArrowLeft } from 'lucide-react';
+import { ThemeProvider } from 'next-themes';
+import { ArrowLeft } from 'lucide-react';
 import { LandingPage } from './components/LandingPage';
 import { InputSection, FormData } from './components/InputSection';
 import { MarkdownPreview } from './components/MarkdownPreview';
@@ -65,13 +65,6 @@ export default function Home() {
 }
 
 function AppHeader({ onBack, onReset }: { onBack: () => void; onReset: () => void }) {
-  const { theme, setTheme } = useTheme();
-
-  const toggleTheme = () => {
-    const currentTheme = theme || 'light';
-    setTheme(currentTheme === 'light' ? 'dark' : 'light');
-  };
-
   return (
     <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
       <div className="container mx-auto px-6 py-4">
@@ -95,17 +88,6 @@ function AppHeader({ onBack, onReset }: { onBack: () => void; onReset: () => voi
               className="px-4 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               Reset
-            </button>
-            <button
-              onClick={toggleTheme}
-              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-              aria-label="Toggle theme"
-            >
-              {(theme || 'light') === 'dark' ? (
-                <Sun className="w-5 h-5 text-slate-400" />
-              ) : (
-                <Moon className="w-5 h-5 text-slate-600" />
-              )}
             </button>
           </div>
         </div>

@@ -55,7 +55,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
 
       const data = await response.json();
       
-      // Merge AI-generated data with existing data (only update fields that were returned)
+      // Merge generated data with existing data (only update fields that were returned)
       const enhancedData: FormData = {
         projectName: data.projectName !== undefined ? data.projectName : currentFormData.projectName,
         description: data.description !== undefined ? data.description : currentFormData.description,
@@ -69,7 +69,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
       setUserInput(''); // Clear input after successful generation
       onOpenChange(false);
     } catch (error) {
-      console.error('AI generation error:', error);
+      console.error('Content generation error:', error);
       setError(error instanceof Error ? error.message : 'An error occurred while generating content. Please try again.');
     } finally {
       setIsGenerating(false);
@@ -87,7 +87,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <Dialog.Title className="text-xl font-semibold text-slate-900 dark:text-white">
-                AI Content Generation
+                Smart Content Generation
               </Dialog.Title>
             </div>
             <Dialog.Close className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">
@@ -114,7 +114,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
                 className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent outline-none transition-colors text-slate-900 dark:text-white resize-none"
               />
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
-                AI will intelligently fill in the form fields based on your description. Subsequent uses will build on existing content.
+                Will intelligently fill in the form fields based on your description. Subsequent uses will build on existing content.
               </p>
             </div>
 
@@ -127,7 +127,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
                 {isGenerating ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    Generating with AI...
+                    Generating...
                   </>
                 ) : (
                   <>
@@ -139,7 +139,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
             </div>
 
             <p className="text-xs text-slate-500 dark:text-slate-400 text-center">
-              Powered by Google Gemini 2.0 Flash. AI will enhance your existing content while preserving your project details.
+              Will enhance your existing content while preserving your project details.
             </p>
           </div>
         </Dialog.Content>

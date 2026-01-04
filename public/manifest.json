@@ -1,11 +1,11 @@
 {
-  "name": "README Generator",
-  "short_name": "README Gen",
-  "description": "AI-powered README file generator using Google Gemini 2.0 Flash",
+  "name": "README Studio",
+  "short_name": "README Studio",
+  "description": "Professional README file generator with smart content generation",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f5f3ee",
-  "theme_color": "#3B82F6",
+  "theme_color": "#ec4899",
   "icons": [
     {
       "src": "/favicon.svg",

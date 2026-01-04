@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://readme-generator.vercel.app'),
-  title: "README Generator - AI-Powered Documentation Tool",
-  description: "Create professional README files with AI-powered content generation using Google Gemini 2.0 Flash. Features smart tech stack badges, live preview, and export options.",
+  title: "README Studio - Professional Documentation Tool",
+  description: "Create professional README files with smart content generation. Features tech stack badges, live preview, and export options.",
   icons: {
     icon: [
       { url: '/logo.svg', type: 'image/svg+xml' },
@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   openGraph: {
-    title: "README Generator - AI-Powered Documentation Tool",
-    description: "Create professional README files with AI-powered content generation using Google Gemini 2.0 Flash.",
+    title: "README Studio - Documentation Tool",
+    description: "Create professional README files with smart content generation.",
     type: "website",
     url: "https://readme-generator.vercel.app",
     images: [
@@ -35,14 +35,14 @@ export const metadata: Metadata = {
         url: '/icon-512.png',
         width: 512,
         height: 512,
-        alt: 'README Generator Icon'
+        alt: 'README Studio Icon'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'README Generator - AI-Powered Documentation Tool',
-    description: 'Create professional README files with AI-powered content generation using Google Gemini 2.0 Flash.',
+    title: 'README Studio - Professional Documentation Tool',
+    description: 'Create professional README files with smart content generation.',
     images: ['/icon-512.png']
   }
 };

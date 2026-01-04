@@ -11,7 +11,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
         <div className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full mb-8">
             <Sparkles className="w-4 h-4" />
-            <span className="text-sm">AI-Powered Documentation</span>
+            <span className="text-sm">Better Documentation</span>
           </div>
 
           <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
@@ -19,8 +19,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
           </h1>
 
           <p className="text-xl text-slate-600 dark:text-slate-400 mb-12 max-w-2xl mx-auto">
-            Create professional, comprehensive README files with structured input fields 
-            and optional AI enhancement.
+            Create professional, comprehensive README files with structured input fields.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
@@ -57,9 +56,8 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Sparkles className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
-              <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-white">AI Assist</h3>
               <p className="text-slate-600 dark:text-slate-400">
-                Enhance your content with AI-powered suggestions and improvements
+                Enhance your content
               </p>
             </div>
           </div>
