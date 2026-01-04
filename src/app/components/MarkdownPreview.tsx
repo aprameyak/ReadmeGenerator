@@ -38,7 +38,7 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
     markdown += `---\n\n`;
     
     // Features Section
-    if (formData.features) {
+    if (formData.features && typeof formData.features === 'string') {
       markdown += `## Features\n\n`;
       const features = formData.features.split('\n').filter(f => f.trim());
       features.forEach(feature => {
@@ -52,7 +52,7 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
     markdown += `---\n\n`;
     
     // Technology Stack Section
-    if (formData.techStackDetails) {
+    if (formData.techStackDetails && typeof formData.techStackDetails === 'string') {
       markdown += `## Technology Stack\n\n`;
       const techDetails = formData.techStackDetails.split('\n').filter(t => t.trim());
       techDetails.forEach(tech => {
