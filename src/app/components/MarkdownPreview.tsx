@@ -17,61 +17,93 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
   const [copied, setCopied] = useState(false);
 
   const generateMarkdown = () => {
-    let markdown = `# ${formData.projectName || 'Project Name'}\n\n`;
-    
+    const lines: string[] = [];
+
+    // Title
+    lines.push(`# ${formData.projectName || 'Project Name'}`, '');
+
     // Tech Stack Badges
     const badges = generateTechBadges(formData.techStack);
     if (badges) {
-      markdown += `${badges}\n\n`;
-    }
-    
-    markdown += `---\n\n`;
-    
-    // About Section
-    markdown += `## About\n\n`;
-    if (formData.description) {
-      markdown += `${formData.description}\n\n`;
-    } else {
-      markdown += `**${formData.projectName || 'Project'}** is a modern project built with cutting-edge technologies.\n\n`;
-    }
-    
-    markdown += `---\n\n`;
-    
-    // Features Section
-    if (formData.features && typeof formData.features === 'string') {
-      markdown += `## Features\n\n`;
-      const features = formData.features.split('\n').filter(f => f.trim());
-      features.forEach(feature => {
-        if (feature.trim()) {
-          markdown += `- ${feature.trim()}\n`;
-        }
-      });
-      markdown += `\n`;
-    }
-    
-    markdown += `---\n\n`;
-    
-    // Technology Stack Section
-    if (formData.techStackDetails && typeof formData.techStackDetails === 'string') {
-      markdown += `## Technology Stack\n\n`;
-      const techDetails = formData.techStackDetails.split('\n').filter(t => t.trim());
-      techDetails.forEach(tech => {
-        if (tech.trim()) {
-          markdown += `- **${tech.trim()}**\n`;
-        }
-      });
-      markdown += `\n`;
-    }
-    
-    // Deployment Section
-    if (formData.deploymentUrl) {
-      const url = formData.deploymentUrl.trim();
-      const displayUrl = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
-      markdown += `## Deployment\n\n`;
-      markdown += `Visit the live site at [${displayUrl}](${url.startsWith('http') ? url : `https://${url}`})\n`;
+      lines.push(badges, '');
     }
 
-    return markdown;
+    lines.push('---', '');
+
+    // About
+    lines.push('## About', '');
+    lines.push(formData.description || `**${formData.projectName || 'Project'}** is a modern project built with cutting-edge technologies.`, '');
+
+    // Screenshot
+    if (formData.screenshotUrl?.trim()) {
+      lines.push('---', '');
+      lines.push('## Screenshots', '');
+      lines.push(`![${formData.projectName || 'Screenshot'}](${formData.screenshotUrl.trim()})`, '');
+    }
+
+    // Features
+    const features = formData.features?.split('\n').map(f => f.trim()).filter(Boolean) ?? [];
+    if (features.length > 0) {
+      lines.push('---', '');
+      lines.push('## Features', '');
+      features.forEach(f => lines.push(`- ${f}`));
+      lines.push('');
+    }
+
+    // Getting Started
+    const prereqs = formData.prerequisites?.split('\n').map(p => p.trim()).filter(Boolean) ?? [];
+    const steps = formData.installation?.split('\n').map(s => s.trim()).filter(Boolean) ?? [];
+    if (prereqs.length > 0 || steps.length > 0) {
+      lines.push('---', '');
+      lines.push('## Getting Started', '');
+      if (prereqs.length > 0) {
+        lines.push('### Prerequisites', '');
+        prereqs.forEach(p => lines.push(`- ${p}`));
+        lines.push('');
+      }
+      if (steps.length > 0) {
+        lines.push('### Installation', '');
+        steps.forEach((step, i) => lines.push(`${i + 1}. \`${step}\``));
+        lines.push('');
+      }
+    }
+
+    // Technology Stack
+    const techDetails = formData.techStackDetails?.split('\n').map(t => t.trim()).filter(Boolean) ?? [];
+    if (techDetails.length > 0) {
+      lines.push('---', '');
+      lines.push('## Technology Stack', '');
+      techDetails.forEach(tech => {
+        const colonIdx = tech.indexOf(':');
+        if (colonIdx !== -1) {
+          const category = tech.slice(0, colonIdx).trim();
+          const value = tech.slice(colonIdx + 1).trim();
+          lines.push(`- **${category}**: ${value}`);
+        } else {
+          lines.push(`- **${tech}**`);
+        }
+      });
+      lines.push('');
+    }
+
+    // Deployment
+    if (formData.deploymentUrl?.trim()) {
+      const url = formData.deploymentUrl.trim();
+      const fullUrl = url.startsWith('http') ? url : `https://${url}`;
+      const displayUrl = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      lines.push('---', '');
+      lines.push('## Deployment', '');
+      lines.push(`Visit the live site at [${displayUrl}](${fullUrl})`, '');
+    }
+
+    // License
+    if (formData.license) {
+      lines.push('---', '');
+      lines.push('## License', '');
+      lines.push(`Distributed under the **${formData.license} License**. See \`LICENSE\` for more information.`, '');
+    }
+
+    return lines.join('\n');
   };
 
   const markdown = generateMarkdown();
@@ -86,25 +118,22 @@ export function MarkdownPreview({ formData }: MarkdownPreviewProps) {
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Preview</h2>
-        <div className="flex gap-2">
-          <button
-            onClick={handleCopy}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-colors"
-          >
-            {copied ? (
-              <>
-                <Check className="w-4 h-4" />
-                Copied!
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" />
-                Copy
-              </>
-            )}
-          </button>
-      
-        </div>
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg transition-colors"
+        >
+          {copied ? (
+            <>
+              <Check className="w-4 h-4" />
+              Copied!
+            </>
+          ) : (
+            <>
+              <Copy className="w-4 h-4" />
+              Copy
+            </>
+          )}
+        </button>
       </div>
 
       <Tabs.Root value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">

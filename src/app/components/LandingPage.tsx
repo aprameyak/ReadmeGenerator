@@ -56,8 +56,9 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Sparkles className="w-6 h-6 text-green-600 dark:text-green-400" />
               </div>
+              <h3 className="text-lg font-semibold mb-2 text-slate-900 dark:text-white">AI Assistance</h3>
               <p className="text-slate-600 dark:text-slate-400">
-                Enhance your content
+                Describe your project in plain English and let AI fill in the details
               </p>
             </div>
           </div>

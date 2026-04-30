@@ -13,7 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://readme-generator.vercel.app'),
+  metadataBase: process.env.NEXT_PUBLIC_BASE_URL
+    ? new URL(process.env.NEXT_PUBLIC_BASE_URL)
+    : undefined,
   title: "README Studio - Professional Documentation Tool",
   description: "Create professional README files with smart content generation. Features tech stack badges, live preview, and export options.",
   icons: {
@@ -29,7 +31,6 @@ export const metadata: Metadata = {
     title: "README Studio - Documentation Tool",
     description: "Create professional README files with smart content generation.",
     type: "website",
-    url: "https://readme-generator.vercel.app",
     images: [
       {
         url: '/icon-512.png',

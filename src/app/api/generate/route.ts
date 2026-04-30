@@ -1,5 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// In-memory rate limiter: 20 requests per IP per minute
+const rateLimit = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_MAX = 20;
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const MAX_INPUT_LENGTH = 2000;
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimit.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    rateLimit.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= RATE_LIMIT_MAX) return false;
+  entry.count++;
+  return true;
+}
+
 type GenerateRequestBody = {
   userInput: string;
   currentFormData: {
@@ -9,24 +28,47 @@ type GenerateRequestBody = {
     features?: string;
     techStackDetails?: string;
     deploymentUrl?: string;
+    screenshotUrl?: string;
+    installation?: string;
+    prerequisites?: string;
+    license?: string;
   };
 };
 
 export async function POST(request: NextRequest) {
   try {
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+      request.headers.get('x-real-ip') ??
+      'unknown';
+
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please wait a moment and try again.' },
+        { status: 429 }
+      );
+    }
+
     const { userInput, currentFormData } = (await request.json()) as GenerateRequestBody;
-    
+
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'Gemini API key not configured. Please set GEMINI_API_KEY environment variable.' },
+        { error: 'Gemini API key not configured.' },
         { status: 500 }
       );
     }
 
     if (!userInput || !userInput.trim()) {
       return NextResponse.json(
-        { error: 'User input is required' },
+        { error: 'User input is required.' },
+        { status: 400 }
+      );
+    }
+
+    if (userInput.length > MAX_INPUT_LENGTH) {
+      return NextResponse.json(
+        { error: `Input must be ${MAX_INPUT_LENGTH} characters or fewer.` },
         { status: 400 }
       );
     }
@@ -37,8 +79,11 @@ export async function POST(request: NextRequest) {
     const existingFeatures = currentFormData?.features || '';
     const existingTechStackDetails = currentFormData?.techStackDetails || '';
     const existingDeploymentUrl = currentFormData?.deploymentUrl || '';
+    const existingScreenshotUrl = currentFormData?.screenshotUrl || '';
+    const existingInstallation = currentFormData?.installation || '';
+    const existingPrerequisites = currentFormData?.prerequisites || '';
+    const existingLicense = currentFormData?.license || '';
 
-    // Create a comprehensive prompt that analyzes user input and fills form fields
     const systemPrompt = `You are an expert README author. Analyze the user's description and intelligently extract or generate content for a README file.
 
 User's description: "${userInput}"
@@ -46,32 +91,43 @@ User's description: "${userInput}"
 Current form data (build on this, don't replace unless user asks to change):
 - Project Name: ${projectName}
 - Description: ${existingDescription || '(empty)'}
-- Tech Stack (comma-separated): ${existingTechStack || '(empty)'}
+- Tech Stack (comma-separated, for badges): ${existingTechStack || '(empty)'}
 - Features (one per line): ${existingFeatures || '(empty)'}
 - Tech Stack Details (one per line, format "Category: Technology Version"): ${existingTechStackDetails || '(empty)'}
 - Deployment URL: ${existingDeploymentUrl || '(empty)'}
+- Screenshot URL: ${existingScreenshotUrl || '(empty)'}
+- Prerequisites (one per line): ${existingPrerequisites || '(empty)'}
+- Installation Steps (one per line, each step is a shell command or instruction): ${existingInstallation || '(empty)'}
+- License: ${existingLicense || '(empty)'}
 
 CRITICAL RULES:
 1. ONLY update fields that are EXPLICITLY mentioned or directly inferable from the user's description
-2. If user describes the project → update description field
-3. If user mentions technologies or "tech stack" → update techStack and techStackDetails
-4. If user mentions features, capabilities, or "what it does" → update features field
-5. If user mentions a URL or "deployed at" → update deploymentUrl
-6. If user mentions project name → update projectName
-7. BUILD ON existing content - if a field has content and user doesn't explicitly mention changing it, DO NOT include it in the response
-8. Only fill empty fields if the user's description provides relevant information for that field
+2. If user describes the project → update description
+3. If user mentions technologies → update techStack (comma-separated) and techStackDetails (one "Category: Tech Version" per line)
+4. If user mentions features or capabilities → update features (one per line)
+5. If user mentions setup, installation, or how to run → update prerequisites and installation
+6. If user mentions a deployment URL → update deploymentUrl
+7. If user mentions a screenshot or demo image URL → update screenshotUrl
+8. If user mentions a license → update license
+9. If user mentions project name → update projectName
+10. BUILD ON existing content — if a field already has content and the user doesn't ask to change it, omit it from the response
+11. For installation steps, write each step as a concrete shell command or short instruction (e.g. "git clone https://..." or "npm install")
 
 Output format (JSON only, no markdown, no code blocks):
 {
-  "projectName": "only if mentioned or needs to be extracted",
-  "description": "only if user describes the project or asks to update description",
-  "techStack": "only if technologies are mentioned",
-  "features": "only if user asks for features or describes capabilities",
-  "techStackDetails": "only if technologies are mentioned",
-  "deploymentUrl": "only if URL is mentioned"
+  "projectName": "...",
+  "description": "...",
+  "techStack": "Tech1, Tech2, Tech3",
+  "features": "Feature one\\nFeature two\\nFeature three",
+  "techStackDetails": "Framework: Next.js 14\\nLanguage: TypeScript 5",
+  "deploymentUrl": "...",
+  "screenshotUrl": "...",
+  "prerequisites": "Node.js v18+\\nnpm or yarn",
+  "installation": "git clone https://github.com/...\\ncd project\\nnpm install\\nnpm run dev",
+  "license": "MIT"
 }
 
-IMPORTANT: Only include fields in the JSON that should be updated based on the user's input. Omit any field that shouldn't change. If a field is empty and user doesn't provide info for it, omit it.`;
+IMPORTANT: Only include fields that should be updated. Omit fields that shouldn't change.`;
 
     // Fallback models in order of preference (all free tier)
     // Using only confirmed valid model names for v1beta API
@@ -196,14 +252,22 @@ IMPORTANT: Only include fields in the JSON that should be updated based on the u
         features: string;
         techStackDetails: string;
         deploymentUrl: string;
+        screenshotUrl: string;
+        installation: string;
+        prerequisites: string;
+        license: string;
       }> = {};
-      
+
       if (parsed.projectName !== undefined) result.projectName = String(parsed.projectName);
       if (parsed.description !== undefined) result.description = String(parsed.description);
       if (parsed.techStack !== undefined) result.techStack = String(parsed.techStack);
       if (parsed.features !== undefined) result.features = String(parsed.features);
       if (parsed.techStackDetails !== undefined) result.techStackDetails = String(parsed.techStackDetails);
       if (parsed.deploymentUrl !== undefined) result.deploymentUrl = String(parsed.deploymentUrl);
+      if (parsed.screenshotUrl !== undefined) result.screenshotUrl = String(parsed.screenshotUrl);
+      if (parsed.installation !== undefined) result.installation = String(parsed.installation);
+      if (parsed.prerequisites !== undefined) result.prerequisites = String(parsed.prerequisites);
+      if (parsed.license !== undefined) result.license = String(parsed.license);
 
       return NextResponse.json(result);
     } catch (parseError) {

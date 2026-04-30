@@ -63,6 +63,10 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
         features: data.features !== undefined ? data.features : currentFormData.features,
         techStackDetails: data.techStackDetails !== undefined ? data.techStackDetails : currentFormData.techStackDetails,
         deploymentUrl: data.deploymentUrl !== undefined ? data.deploymentUrl : currentFormData.deploymentUrl,
+        screenshotUrl: data.screenshotUrl !== undefined ? data.screenshotUrl : currentFormData.screenshotUrl,
+        installation: data.installation !== undefined ? data.installation : currentFormData.installation,
+        prerequisites: data.prerequisites !== undefined ? data.prerequisites : currentFormData.prerequisites,
+        license: data.license !== undefined ? data.license : currentFormData.license,
       };
 
       onGenerate(enhancedData);
