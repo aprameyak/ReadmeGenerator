@@ -1,40 +1,67 @@
 # README Studio
 
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+A Next.js web app for drafting a project README from a form, with a live Markdown preview and an optional Gemini-backed assistant that fills in fields from a plain-language description.
 
----
-
-## About
-
-**README Studio** is a modern README generator built with **Next.js, TypeScript, and Tailwind CSS**. It helps developers create professional README files with structured input fields and smart content generation.
-
----
+Live site: https://readme-generator-gold.vercel.app
 
 ## Features
 
-- **Smart Content Generation**: Automatically generates descriptions, features, and tech stack details
-- **Live Preview**: Real-time markdown preview with syntax highlighting
-- **Portfolio Template**: Pre-configured template matching modern portfolio README structure
-- **Tech Stack Badges**: Automatic generation of shields.io badges for popular technologies
-- **Copy & Download**: Easy export of generated README files
-- **Dark Mode**: Full dark mode support
-- **Responsive Design**: Works seamlessly on all devices
+- Form fields for project name, description, tech stack, features, prerequisites, installation steps, tech stack details, deployment URL, screenshot URL, and license
+- Live preview with a "Preview" tab (rendered with `react-markdown` and `remark-gfm`) and a "Raw Markdown" tab
+- Tech stack entries turn into shields.io badges, using a built-in map of common technologies and a generic gray badge for anything not in the map
+- "Copy" button that puts the generated Markdown on the clipboard
+- AI assistant: describe the project in up to 2000 characters and the app asks Gemini to update only the fields your description mentions
 
----
+## Getting started
 
-## Technology Stack
+Requires Node.js (CI uses Node 20) and npm.
 
-- **Framework**: Next.js 16
-- **Language**: TypeScript 5
-- **Styling**: Tailwind CSS 4
-- **Content Generation**: Smart content generation
-- **Deployment**: Vercel
+```bash
+git clone https://github.com/aprameyak/ReadmeGenerator.git
+cd ReadmeGenerator
+npm install
+```
 
----
+The AI assistant needs a Google Gemini API key. Create `.env.local` in the project root:
 
-## Live Deployment
+```bash
+GEMINI_API_KEY=your-key-here
+```
 
-Visit the live application: **[https://readme-generator-repository.vercel.app/](https://readme-generator-repository.vercel.app/)**
+Without the key, the form and preview still work, but the assistant returns an error.
+
+Then run the dev server:
+
+```bash
+npm run dev
+```
+
+Other scripts: `npm run build`, `npm run start`, `npm run lint`.
+
+## Usage
+
+1. Open http://localhost:3000 and click "Start Generating".
+2. Fill in the form on the left. The preview on the right updates as you type.
+3. Optionally click "Smart Generate" and describe the project, for example "A CLI in Go that syncs dotfiles, MIT licensed". Returned fields are merged into the form.
+4. Switch to "Raw Markdown" or click "Copy" and paste the result into your repo's `README.md`.
+
+## How it works
+
+- `src/app/page.tsx` holds the form state and lays out the input panel, preview, and assistant modal.
+- `src/app/components/MarkdownPreview.tsx` builds the Markdown string from the form data, section by section, skipping empty sections.
+- `src/app/components/templates.ts` contains the default form content and the tech-to-badge map.
+- `src/app/api/generate/route.ts` is the assistant endpoint. It rate-limits to 20 requests per IP per minute (in memory), sends a prompt to the Gemini REST API, falls back through a list of Gemini models if one fails or hits a quota, and parses the JSON reply into form fields.
+
+## Limitations
+
+- The rate limiter is an in-memory `Map`, so it resets on restart and is not shared across serverless instances.
+- AI output is not validated beyond JSON parsing. Review generated text, URLs, and install commands before using them.
+- There are no automated tests. CI runs lint and build only.
+
+## Contributing
+
+Issues and pull requests are welcome. Before opening a PR, run `npm run lint` and `npm run build`, which is what CI (`.github/workflows/ci.yml`) checks.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
