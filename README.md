@@ -2,7 +2,7 @@
 
 A Next.js web app for drafting a project README from a form, with a live Markdown preview and an optional Gemini-backed assistant that fills in fields from a plain-language description.
 
-Live site: https://readme-generator-gold.vercel.app
+Live site: https://readme-generator.aprameyak.workers.dev
 
 ## Features
 

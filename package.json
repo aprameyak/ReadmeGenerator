@@ -9,16 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.20.17",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-tabs": "^1.1.13",
     "@tailwindcss/typography": "^0.5.19",
     "lucide-react": "^0.562.0",
-    "next": "15.5.28",
+    "next": "^15.5.29",
     "next-themes": "^0.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "wrangler": "^4.164.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
