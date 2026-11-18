@@ -87,7 +87,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-slate-800 rounded-xl shadow-2xl p-6 w-full max-w-lg z-50 max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-rose-500 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-stone-800">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <Dialog.Title className="text-xl font-semibold text-slate-900 dark:text-white">
@@ -126,7 +126,7 @@ export function AIModal({ open, onOpenChange, currentFormData, onGenerate }: AIM
               <button
                 onClick={handleGenerate}
                 disabled={isGenerating || !userInput.trim()}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 disabled:from-slate-400 disabled:to-slate-500 text-white rounded-lg transition-colors shadow-lg disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 text-white rounded-lg transition-colors shadow-lg disabled:cursor-not-allowed bg-stone-800 hover:bg-stone-900 disabled:bg-slate-400"
               >
                 {isGenerating ? (
                   <>

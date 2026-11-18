@@ -77,7 +77,7 @@ function AppHeader({ onBack, onReset }: { onBack: () => void; onReset: () => voi
               <ArrowLeft className="w-4 h-4" />
               Back
             </button>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold text-stone-800">
               README Studio
             </h1>
           </div>

@@ -34,7 +34,7 @@ export function InputSection({
         <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Project Details</h2>
         <button
           onClick={onOpenAIModal}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white rounded-lg transition-colors shadow-md"
+          className="flex items-center gap-2 px-4 py-2 text-white rounded-lg transition-colors shadow-md bg-stone-800 hover:bg-stone-900"
         >
           <Sparkles className="w-4 h-4" />
           Smart Generate

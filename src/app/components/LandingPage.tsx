@@ -6,7 +6,7 @@ interface LandingPageProps {
 
 export function LandingPage({ onGetStarted }: LandingPageProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-pink-50 to-rose-50 dark:from-slate-950 dark:via-slate-900 dark:to-rose-950">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       <div className="container mx-auto px-6 py-20">
         <div className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 px-4 py-2 rounded-full mb-8">
@@ -14,7 +14,7 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
             <span className="text-sm">Better Documentation</span>
           </div>
 
-          <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+          <h1 className="text-6xl font-bold mb-6 text-slate-900 dark:text-white">
             Generate Beautiful GitHub READMEs in Minutes
           </h1>
 
